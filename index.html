@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Sys Impianti Elettrici | Elettricisti a Revello (CN)</title>
+    <meta name="description" content="New Sys Impianti Elettrici: impianti elettrici civili e industriali, climatizzazione, efficientamento energetico, domotica, videosorveglianza e antifurto a Cuneo e provincia. Dal 2008.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:site_name" content="New Sys Impianti Elettrici">
+    <meta property="og:locale" content="it_IT">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="New Sys Impianti Elettrici | Lavori a regola d'arte">
+    <meta property="og:description" content="Impianti elettrici, climatizzazione, efficientamento energetico, domotica e sicurezza a Cuneo e provincia.">
+    <meta name="theme-color" content="#05070f">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/logo-mark.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <noscript><style>.reveal{opacity:1!important;transform:none!important}#boot{display:none!important}</style></noscript>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Electrician",
+      "name": "New Sys Impianti Elettrici",
+      "logo": "assets/logo-newsys.png",
+      "legalName": "New Sys S.r.l.",
+      "vatID": "IT03238000040",
+      "foundingDate": "2008",
+      "telephone": "+39 0175 259243",
+      "email": "newsysimpianti@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Via Guido Motta, 13",
+        "postalCode": "12036",
+        "addressLocality": "Revello",
+        "addressRegion": "CN",
+        "addressCountry": "IT"
+      },
+      "geo": { "@type": "GeoCoordinates", "latitude": 44.6605, "longitude": 7.3948 },
+      "areaServed": "Provincia di Cuneo"
+    }
+    </script>
+</head>
+
+<body>
+    <!-- Boot: the visitor powers the site on with the main switch (once per session) -->
+    <div id="boot" class="boot" role="dialog" aria-modal="true" aria-labelledby="boot-title" hidden>
+        <div class="boot-inner">
+            <span class="logo-badge boot-logo"><img src="assets/logo-newsys.png" alt="New Sys s.r.l. Impianti" width="512" height="214"></span>
+            <p class="boot-status"><span class="boot-led"></span> <span data-boot-status>Impianto in standby</span></p>
+            <h2 id="boot-title" class="boot-title">Dai corrente al sito</h2>
+            <button class="boot-lever" type="button" aria-label="Alza la leva dell'interruttore generale">
+                <span class="boot-lever-track">
+                    <span class="boot-lever-on">ON</span>
+                    <span class="boot-lever-handle"></span>
+                    <span class="boot-lever-off">OFF</span>
+                </span>
+            </button>
+            <p class="boot-hint">Clicca o trascina la leva verso l'alto</p>
+            <div class="boot-log" aria-hidden="true">
+                <span>Test differenziale ........ <b>OK</b></span>
+                <span>Messa a terra ............. <b>OK</b></span>
+                <span>Isolamento linee .......... <b>OK</b></span>
+            </div>
+            <button class="boot-skip" type="button">Entra senza animazione</button>
+        </div>
+    </div>
+
+    <canvas id="sparks" class="sparks" aria-hidden="true"></canvas>
+
+    <nav class="nav" id="nav" aria-label="Navigazione principale">
+        <a href="#home" class="nav-brand" aria-label="New Sys, torna all'inizio">
+            <span class="logo-badge"><img src="assets/logo-newsys.png" alt="New Sys s.r.l. Impianti" width="512" height="214"></span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Apri il menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#servizi">Servizi</a></li>
+            <li><a href="#domotica">Casa smart</a></li>
+            <li><a href="#chi-siamo">Chi siamo</a></li>
+            <li><a href="#contatti">Contatti</a></li>
+        </ul>
+        <a href="tel:+393357027889" class="nav-call magnetic"><i class="fas fa-phone"></i> <span>335 7027889</span></a>
+    </nav>
+
+    <main id="contenuto">
+        <!-- HERO -->
+        <header class="hero" id="home">
+            <canvas class="hero-circuit" id="hero-circuit" aria-hidden="true"></canvas>
+            <div class="hero-glow" aria-hidden="true"></div>
+            <div class="hero-frame" aria-hidden="true">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="hero-frame-top">
+                    <span><span class="live-dot"></span> LINEA ATTIVA</span>
+                    <span data-live="volt">230.0 V</span>
+                    <span data-live="hz">50.00 Hz</span>
+                </div>
+                <div class="hero-frame-bottom">
+                    <span>REVELLO (CN) · 44.66°N 7.39°E</span>
+                    <span>DAL 2008</span>
+                </div>
+            </div>
+            <div class="hero-content">
+                <span class="kicker reveal">Forniamo installazioni, aggiornamenti e manutenzione</span>
+                <h1 class="reveal" data-decode>Lavori a regola d'arte, <em>affidabili nel tempo.</em></h1>
+                <p class="reveal">Impianti elettrici civili e industriali, climatizzazione, domotica e sicurezza a Cuneo e provincia. Prezzi concorrenziali, materiali di alta qualità e tecnologie all'avanguardia: per noi sono una garanzia.</p>
+                <div class="hero-cta reveal">
+                    <a href="#servizi" class="btn btn-primary magnetic">Scopri i servizi <i class="fas fa-bolt"></i></a>
+                    <a href="#contatti" class="btn btn-ghost magnetic">Richiedi informazioni</a>
+                </div>
+            </div>
+            <a href="#cablaggio" class="scroll-cue">Scorri per cablare <i></i></a>
+        </header>
+
+        <div class="ticker" aria-hidden="true">
+            <div class="ticker-track">
+                <span>Impianti elettrici</span><i class="fas fa-bolt"></i>
+                <span>Climatizzazione</span><i class="fas fa-bolt"></i>
+                <span>Fotovoltaico</span><i class="fas fa-bolt"></i>
+                <span>Domotica</span><i class="fas fa-bolt"></i>
+                <span>Videosorveglianza</span><i class="fas fa-bolt"></i>
+                <span>Antifurto</span><i class="fas fa-bolt"></i>
+                <span>Reti LAN</span><i class="fas fa-bolt"></i>
+                <span>Videocitofoni</span><i class="fas fa-bolt"></i>
+                <span>Impianti elettrici</span><i class="fas fa-bolt"></i>
+                <span>Climatizzazione</span><i class="fas fa-bolt"></i>
+                <span>Fotovoltaico</span><i class="fas fa-bolt"></i>
+                <span>Domotica</span><i class="fas fa-bolt"></i>
+                <span>Videosorveglianza</span><i class="fas fa-bolt"></i>
+                <span>Antifurto</span><i class="fas fa-bolt"></i>
+                <span>Reti LAN</span><i class="fas fa-bolt"></i>
+                <span>Videocitofoni</span><i class="fas fa-bolt"></i>
+            </div>
+        </div>
+
+        <!-- SCROLL WIRING: the plan gets wired as you scroll -->
+        <section class="wiring" id="cablaggio" aria-label="Come nasce un impianto: dal progetto al collaudo">
+            <div class="wiring-sticky">
+                <div class="wiring-plan">
+                    <svg viewBox="0 0 600 420" class="plan-svg" role="img" aria-label="Planimetria di un appartamento che viene cablata dal quadro elettrico fino a ogni stanza">
+                        <defs>
+                            <pattern id="plan-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M20 0H0V20" fill="none" stroke="currentColor" stroke-width=".4" opacity=".25"/>
+                            </pattern>
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="3.5" result="b"/>
+                                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        <rect width="600" height="420" fill="url(#plan-grid)" class="plan-bg"/>
+                        <g class="plan-rooms">
+                            <rect x="40" y="40" width="280" height="180" data-room-fill/>
+                            <rect x="320" y="40" width="240" height="160" data-room-fill/>
+                            <rect x="40" y="220" width="220" height="150" data-room-fill/>
+                            <rect x="260" y="220" width="130" height="150" data-room-fill/>
+                            <rect x="390" y="200" width="170" height="170" data-room-fill/>
+                        </g>
+                        <g class="plan-walls" fill="none">
+                            <path d="M40 40H560V370H360M300 370H40V40"/>
+                            <path d="M320 40V200H390M430 200H560"/>
+                            <path d="M40 220H180M220 220H320V200"/>
+                            <path d="M260 220V370M390 200V300M390 340V370"/>
+                        </g>
+                        <g class="plan-labels">
+                            <text x="70" y="70">SOGGIORNO</text>
+                            <text x="350" y="70">CUCINA</text>
+                            <text x="70" y="250">CAMERA</text>
+                            <text x="280" y="250">BAGNO</text>
+                            <text x="410" y="230">STUDIO</text>
+                        </g>
+                        <g class="plan-cables" data-cables></g>
+                        <g class="plan-points" data-points></g>
+                        <g class="plan-panel" transform="translate(314 352)">
+                            <rect width="40" height="30" rx="4"/>
+                            <path d="M10 8l6 7h-5l6 8" fill="none"/>
+                        </g>
+                        <g class="plan-stamp" transform="translate(470 395)">
+                            <rect x="-86" y="-16" width="172" height="30" rx="6"/>
+                            <text text-anchor="middle" y="5">COLLAUDO SUPERATO ✓</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="wiring-side">
+                    <div class="wiring-hud" aria-hidden="true">
+                        <div class="wiring-bar"><span></span></div>
+                        <div class="wiring-readout">
+                            <div><small>CABLAGGIO</small><b data-wire="pct">0</b><em>%</em></div>
+                            <div><small>CAVO POSATO</small><b data-wire="m">0</b><em>m</em></div>
+                            <div><small>PUNTI ATTIVI</small><b data-wire="pts">0</b><em>/<span data-wire="tot">0</span></em></div>
+                        </div>
+                    </div>
+                    <div class="wiring-captions">
+                        <p data-at="0"><small>00 · Sopralluogo</small>Si parte dalla planimetria.</p>
+                        <p data-at="0.22"><small>01 · Progetto e posa</small>Ogni linea al suo posto, dal quadro a ogni stanza.</p>
+                        <p data-at="0.66"><small>02 · Accensione</small>Luci, prese, dati: tutto in funzione.</p>
+                        <p data-at="0.9"><small>03 · Collaudo</small>Materiali certificati, lavoro a regola d'arte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES: the electrical panel -->
+        <section class="section" id="servizi">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="kicker">I nostri servizi</span>
+                    <h2 data-decode>Il quadro dei servizi</h2>
+                    <p>Ogni interruttore è un servizio. Alza una levetta per accendere la linea e scoprire cosa possiamo fare per te.</p>
+                </div>
+                <div class="panel-wrap reveal">
+                    <div class="epanel" role="group" aria-label="Quadro elettrico dei servizi">
+                        <div class="epanel-head">
+                            <span class="epanel-brand">NEW SYS · QE-01</span>
+                            <span class="epanel-led" data-panel-led></span>
+                        </div>
+                        <div class="epanel-rail">
+                            <button class="breaker breaker-main" type="button" data-main aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label">Generale</span>
+                            </button>
+                            <button class="breaker" type="button" data-service="elettrici" aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label"><i class="fas fa-plug"></i>Elettrici</span>
+                            </button>
+                            <button class="breaker" type="button" data-service="clima" aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label"><i class="fas fa-temperature-half"></i>Termotecnica</span>
+                            </button>
+                            <button class="breaker" type="button" data-service="energia" aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label"><i class="fas fa-solar-panel"></i>Solare</span>
+                            </button>
+                            <button class="breaker" type="button" data-service="domotica" aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label"><i class="fas fa-house-signal"></i>Domotica</span>
+                            </button>
+                            <button class="breaker" type="button" data-service="sicurezza" aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label"><i class="fas fa-shield-halved"></i>Sicurezza</span>
+                            </button>
+                            <button class="breaker" type="button" data-service="reti" aria-pressed="false">
+                                <span class="breaker-body"><span class="breaker-lever"></span></span>
+                                <span class="breaker-label"><i class="fas fa-satellite-dish"></i>Reti e TV</span>
+                            </button>
+                        </div>
+                        <div class="epanel-foot">
+                            <span>230/400 V ~ 50 Hz</span><span>IP40</span><span>CEI 64-8</span>
+                        </div>
+                    </div>
+
+                    <div class="display" aria-live="polite">
+                        <div class="display-screen" data-display>
+                            <div class="display-idle">
+                                <i class="fas fa-power-off"></i>
+                                <p>Linea spenta</p>
+                                <small>Alza una levetta del quadro</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE SMART HOME -->
+        <section class="section section-alt" id="domotica">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="kicker">Esperienza interattiva</span>
+                    <h2 data-decode>Prendi il controllo della casa</h2>
+                    <p>Una casa con impianto elettrico, clima, fotovoltaico, domotica e antifurto firmati New Sys. Tocca le stanze, cambia l'ora del giorno, attiva l'allarme: il contatore in basso segue ogni tua scelta.</p>
+                </div>
+
+                <div class="home-lab reveal">
+                    <div class="home-stage" data-home>
+                        <svg viewBox="0 0 800 520" class="home-svg" role="img" aria-label="Casa interattiva in sezione con cinque stanze, pannelli solari e telecamera">
+                            <defs>
+                                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0" data-sky-top stop-color="#0a1033"/>
+                                    <stop offset="1" data-sky-bottom stop-color="#1a2150"/>
+                                </linearGradient>
+                                <radialGradient id="cone" cx=".5" cy="0" r="1">
+                                    <stop offset="0" stop-color="#ffd27a" stop-opacity=".85"/>
+                                    <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+                                </radialGradient>
+                                <linearGradient id="cam-cone" x1="1" y1="0" x2="0" y2="1">
+                                    <stop offset="0" stop-color="#ff4d4d" stop-opacity=".55"/>
+                                    <stop offset="1" stop-color="#ff4d4d" stop-opacity="0"/>
+                                </linearGradient>
+                                <radialGradient id="sun-glow">
+                                    <stop offset="0" stop-color="#ffd76b" stop-opacity=".9"/>
+                                    <stop offset="1" stop-color="#ffb320" stop-opacity="0"/>
+                                </radialGradient>
+                            </defs>
+
+                            <rect width="800" height="520" fill="url(#sky)"/>
+                            <g class="stars" data-stars></g>
+                            <g data-sun>
+                                <circle r="70" fill="url(#sun-glow)"/>
+                                <circle r="24" fill="#ffd76b"/>
+                            </g>
+                            <g data-moon>
+                                <circle r="18" fill="#dfe6ff"/>
+                                <circle r="18" cx="9" cy="-5" fill="#0d1440"/>
+                            </g>
+
+                            <!-- ground -->
+                            <rect y="480" width="800" height="40" fill="#0d2a1f"/>
+                            <path d="M0 480H800" stroke="#1d5a3f" stroke-width="3"/>
+
+                            <!-- roof + solar -->
+                            <polygon points="118,142 380,30 642,142" class="roof"/>
+                            <g transform="translate(398 46) rotate(23.2)" class="solar" data-solar>
+                                <rect x="0" y="0" width="58" height="32" rx="2"/>
+                                <rect x="64" y="0" width="58" height="32" rx="2"/>
+                                <rect x="128" y="0" width="58" height="32" rx="2"/>
+                                <rect x="192" y="0" width="58" height="32" rx="2"/>
+                                <path d="M0 16H250M29 0V32M93 0V32M157 0V32M221 0V32" class="solar-lines"/>
+                            </g>
+
+                            <!-- house body -->
+                            <rect x="140" y="142" width="480" height="338" class="house"/>
+                            <rect x="620" y="352" width="140" height="128" class="house"/>
+
+                            <!-- rooms -->
+                            <g class="room" data-room="camera" tabindex="0" role="button" aria-label="Luce camera">
+                                <rect x="150" y="152" width="225" height="140" class="room-bg"/>
+                                <polygon points="250,190 200,292 325,292 275,190" class="room-cone"/>
+                                <line x1="262" y1="152" x2="262" y2="180" class="lamp-wire"/>
+                                <circle cx="262" cy="185" r="7" class="lamp"/>
+                                <rect x="165" y="250" width="110" height="34" rx="5" class="furn"/>
+                                <rect x="165" y="238" width="26" height="16" rx="4" class="furn"/>
+                                <text x="162" y="172" class="room-name">CAMERA</text>
+                            </g>
+                            <g class="room" data-room="bagno" tabindex="0" role="button" aria-label="Luce bagno">
+                                <rect x="385" y="152" width="225" height="140" class="room-bg"/>
+                                <polygon points="485,190 440,292 555,292 510,190" class="room-cone"/>
+                                <line x1="497" y1="152" x2="497" y2="180" class="lamp-wire"/>
+                                <circle cx="497" cy="185" r="7" class="lamp"/>
+                                <rect x="520" y="248" width="76" height="36" rx="12" class="furn"/>
+                                <rect x="410" y="244" width="34" height="40" rx="4" class="furn"/>
+                                <text x="397" y="172" class="room-name">BAGNO</text>
+                            </g>
+                            <g class="room" data-room="soggiorno" tabindex="0" role="button" aria-label="Luce soggiorno">
+                                <rect x="150" y="302" width="265" height="170" class="room-bg"/>
+                                <polygon points="270,342 205,472 360,472 295,342" class="room-cone"/>
+                                <line x1="282" y1="302" x2="282" y2="332" class="lamp-wire"/>
+                                <circle cx="282" cy="337" r="8" class="lamp"/>
+                                <rect x="175" y="432" width="130" height="32" rx="8" class="furn"/>
+                                <rect x="330" y="410" width="60" height="40" rx="3" class="furn tv" data-tv/>
+                                <text x="162" y="322" class="room-name">SOGGIORNO</text>
+                                <!-- AC unit -->
+                                <g class="ac" data-ac>
+                                    <rect x="330" y="318" width="70" height="22" rx="5"/>
+                                    <path d="M338 346q12 10 0 20M356 346q12 10 0 20M374 346q12 10 0 20" class="ac-air"/>
+                                </g>
+                            </g>
+                            <g class="room" data-room="cucina" tabindex="0" role="button" aria-label="Luce cucina">
+                                <rect x="425" y="302" width="185" height="170" class="room-bg"/>
+                                <polygon points="505,342 460,472 580,472 530,342" class="room-cone"/>
+                                <line x1="517" y1="302" x2="517" y2="332" class="lamp-wire"/>
+                                <circle cx="517" cy="337" r="8" class="lamp"/>
+                                <rect x="440" y="420" width="155" height="44" rx="3" class="furn"/>
+                                <text x="437" y="322" class="room-name">CUCINA</text>
+                            </g>
+                            <g class="room" data-room="garage" tabindex="0" role="button" aria-label="Luce garage">
+                                <rect x="628" y="360" width="124" height="112" class="room-bg"/>
+                                <polygon points="680,390 645,472 735,472 700,390" class="room-cone"/>
+                                <line x1="690" y1="360" x2="690" y2="380" class="lamp-wire"/>
+                                <circle cx="690" cy="385" r="6" class="lamp"/>
+                                <rect x="644" y="440" width="92" height="26" rx="10" class="furn"/>
+                                <text x="636" y="378" class="room-name">GARAGE</text>
+                            </g>
+
+                            <!-- door + sensor -->
+                            <circle cx="620" cy="370" r="5" class="sensor" data-sensor/>
+
+                            <!-- CCTV -->
+                            <g class="cctv" data-cctv transform="translate(136 300)">
+                                <g data-cctv-head>
+                                    <polygon points="0,0 -150,150 -40,180" class="cctv-cone" fill="url(#cam-cone)"/>
+                                    <rect x="-24" y="-7" width="28" height="14" rx="3" class="cctv-body"/>
+                                    <circle cx="-22" cy="0" r="3" class="cctv-led"/>
+                                </g>
+                            </g>
+                            <!-- alarm overlay -->
+                            <rect width="800" height="520" class="alarm-flash" data-flash/>
+                        </svg>
+                        <div class="home-tip" data-home-tip>Tocca una stanza per accendere la luce</div>
+                    </div>
+
+                    <div class="home-controls">
+                        <div class="ctrl-group">
+                            <h3><i class="fas fa-wand-magic-sparkles"></i> Scenari</h3>
+                            <div class="scenes">
+                                <button type="button" class="chip" data-scene="rientro"><i class="fas fa-house"></i> Rientro</button>
+                                <button type="button" class="chip" data-scene="esco"><i class="fas fa-door-open"></i> Esco</button>
+                                <button type="button" class="chip" data-scene="notte"><i class="fas fa-moon"></i> Notte</button>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <h3><i class="fas fa-lightbulb"></i> Luci</h3>
+                            <div class="light-switches" data-light-switches></div>
+                        </div>
+                        <div class="ctrl-group">
+                            <h3><i class="fas fa-temperature-half"></i> Clima <output data-temp-out>Spento</output></h3>
+                            <div class="ctrl-row">
+                                <button type="button" class="chip" data-clima-mode="off" aria-pressed="true"><i class="fas fa-power-off"></i> Spento</button>
+                                <button type="button" class="chip chip-heat" data-clima-mode="heat" aria-pressed="false"><i class="fas fa-fire"></i> Riscalda</button>
+                                <button type="button" class="chip chip-cool" data-clima-mode="cool" aria-pressed="false"><i class="fas fa-snowflake"></i> Raffresca</button>
+                            </div>
+                            <label class="range-field">
+                                <input type="range" min="16" max="30" value="22" step="1" data-temp aria-label="Temperatura impostata">
+                                <span class="range-scale"><span>16 °C</span><span>30 °C</span></span>
+                            </label>
+                        </div>
+                        <div class="ctrl-group">
+                            <h3><i class="fas fa-sun"></i> Ora del giorno <output data-hour-out>12:00</output></h3>
+                            <label class="range-field">
+                                <input type="range" min="0" max="24" value="12" step="0.25" data-hour aria-label="Ora del giorno">
+                                <span class="range-scale"><span><i class="fas fa-moon"></i> 00:00</span><span>12:00</span><span>24:00 <i class="fas fa-moon"></i></span></span>
+                            </label>
+                        </div>
+                        <div class="ctrl-group">
+                            <h3><i class="fas fa-shield-halved"></i> Antifurto <output data-alarm-out>Disinserito</output></h3>
+                            <div class="ctrl-row">
+                                <button type="button" class="toggle" data-alarm aria-pressed="false"><span></span>Inserisci</button>
+                                <button type="button" class="chip chip-danger" data-intrude disabled><i class="fas fa-person-running"></i> Simula intrusione</button>
+                            </div>
+                        </div>
+                        <div class="energy">
+                            <ul class="energy-spec">
+                                <li><i class="fas fa-gauge-high"></i> Contatore 6 kW</li>
+                                <li><i class="fas fa-solar-panel"></i> Fotovoltaico 8 kWp</li>
+                                <li><i class="fas fa-car-battery"></i> Accumulo 10 kWh</li>
+                            </ul>
+                            <div><small>Consumo</small><b data-e="load">0.00</b><em>kW</em></div>
+                            <div><small>Produzione</small><b data-e="prod">0.00</b><em>kW</em></div>
+                            <div><small data-e="batt-label">Batteria</small><b data-e="batt">0</b><em>%</em></div>
+                            <div><small data-e="grid-label">Dalla rete</small><b data-e="grid">0.00</b><em>kW</em></div>
+                            <div class="energy-meter"><small data-e="meter-label">Prelievo dal contatore</small><span data-e="meter">0.0 / 6 kW</span></div>
+                            <div class="energy-bar"><span data-e="bar"></span></div>
+                            <p class="energy-note">Simulazione indicativa di una villetta</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="section section-alt" id="chi-siamo">
+            <div class="container about">
+                <div class="about-text reveal">
+                    <span class="kicker">Chi siamo</span>
+                    <h2 data-decode>Elettricisti esperti, servizi di qualità</h2>
+                    <p>Dal 2008 New Sys si occupa dell'installazione e della manutenzione di impianti elettrici civili e industriali: dall'elettrico all'antintrusione, dal fotovoltaico alla quadristica industriale, fino a videocitofoni, reti LAN e automazione.</p>
+                    <p>Operiamo a Cuneo e provincia e interveniamo per manutenzioni e riparazioni anche fuori zona. Il nostro obiettivo è sempre lo stesso: impianti all'avanguardia, materiali certificati e manodopera qualificata.</p>
+                    <ul class="about-list">
+                        <li><i class="fas fa-house-chimney"></i> Impianti civili</li>
+                        <li><i class="fas fa-industry"></i> Impianti industriali</li>
+                        <li><i class="fas fa-snowflake"></i> Climatizzazione</li>
+                        <li><i class="fas fa-fire-flame-curved"></i> Impianti di riscaldamento</li>
+                        <li><i class="fas fa-house-signal"></i> Domotica</li>
+                        <li><i class="fas fa-shield-halved"></i> Antintrusione</li>
+                        <li><i class="fas fa-fire-extinguisher"></i> Antincendio</li>
+                        <li><i class="fas fa-video"></i> Videosorveglianza</li>
+                        <li><i class="fas fa-solar-panel"></i> Impianti fotovoltaici</li>
+                        <li><i class="fas fa-leaf"></i> Efficientamento energetico</li>
+                        <li><i class="fas fa-bell"></i> Videocitofoni</li>
+                        <li><i class="fas fa-network-wired"></i> Reti LAN</li>
+                        <li><i class="fas fa-road-barrier"></i> Cancelli automatici</li>
+                    </ul>
+                </div>
+                <div class="about-stats">
+                    <div class="stat reveal"><i class="fas fa-calendar-check stat-icon" aria-hidden="true"></i><b class="stat-value"><span data-count="2008" data-from="1990">2008</span></b><span class="stat-label">Anno di fondazione</span></div>
+                    <div class="stat reveal"><i class="fas fa-layer-group stat-icon" aria-hidden="true"></i><b class="stat-value"><span data-count="13">13</span></b><span class="stat-label">Tipologie di impianti</span></div>
+                    <div class="stat reveal"><i class="fas fa-certificate stat-icon" aria-hidden="true"></i><b class="stat-value"><span data-count="100">100</span><small>%</small></b><span class="stat-label">Materiali certificati</span></div>
+                    <div class="stat reveal"><i class="fas fa-location-dot stat-icon" aria-hidden="true"></i><b class="stat-value">CN</b><span class="stat-label">Cuneo e provincia</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONSULTING PROCESS -->
+        <section class="section" id="consulenza">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="kicker">Consulenza tecnica</span>
+                    <h2 data-decode>Ti spieghiamo ogni passaggio</h2>
+                    <p>Oltre a realizzare il lavoro, ti accompagniamo passo dopo passo: così capisci cosa stiamo facendo e ne apprezzi tutti i vantaggi.</p>
+                </div>
+                <ol class="steps" data-steps>
+                    <li class="step reveal"><span class="step-node"><i class="fas fa-comments"></i></span><h3>Primo contatto</h3><p>Ci racconti l'esigenza, ti diamo le prime indicazioni.</p></li>
+                    <li class="step reveal"><span class="step-node"><i class="fas fa-ruler-combined"></i></span><h3>Sopralluogo</h3><p>Verifichiamo ambienti, impianto esistente e documentazione.</p></li>
+                    <li class="step reveal"><span class="step-node"><i class="fas fa-file-signature"></i></span><h3>Proposta</h3><p>Progetto tecnico-economico chiaro, con prezzi concorrenziali.</p></li>
+                    <li class="step reveal"><span class="step-node"><i class="fas fa-screwdriver-wrench"></i></span><h3>Realizzazione</h3><p>Installazione con materiali certificati e personale qualificato.</p></li>
+                    <li class="step reveal"><span class="step-node"><i class="fas fa-circle-check"></i></span><h3>Collaudo e assistenza</h3><p>Verifica finale, certificazione e manutenzione nel tempo.</p></li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="section section-alt" id="contatti">
+            <div class="container contact">
+                <div class="contact-info reveal">
+                    <span class="kicker">Contatti</span>
+                    <h2 data-decode>Accendiamo il tuo progetto</h2>
+                    <p>Compila il modulo o chiamaci: il nostro staff ti risponde nel minor tempo possibile.</p>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-location-dot"></i><div><small>Vieni a trovarci</small><a href="https://www.google.com/maps/search/?api=1&query=Via+Guido+Motta+13+12036+Revello+CN" target="_blank" rel="noopener">Via Guido Motta, 13 · 12036 Revello (CN)</a></div></li>
+                        <li><i class="fas fa-mobile-screen"></i><div><small>Cellulare</small><a href="tel:+393357027889">+39 335 7027889</a></div></li>
+                        <li><i class="fas fa-phone"></i><div><small>Tel. e Fax</small><a href="tel:+390175259243">+39 0175 259243</a></div></li>
+                        <li><i class="fas fa-envelope"></i><div><small>Email</small><a href="mailto:newsysimpianti@gmail.com">newsysimpianti@gmail.com</a></div></li>
+                    </ul>
+                </div>
+                <form class="contact-form reveal" data-contact novalidate>
+                    <div class="form-row">
+                        <label><span>Nome</span><input type="text" name="nome" required autocomplete="name"></label>
+                        <label><span>Email</span><input type="email" name="email" required autocomplete="email"></label>
+                    </div>
+                    <div class="form-row">
+                        <label><span>Telefono</span><input type="tel" name="telefono" autocomplete="tel"></label>
+                        <label><span>Servizio</span>
+                            <select name="servizio" required>
+                                <option value="">Seleziona servizio</option>
+                                <option>Impianti Elettrici</option>
+                                <option>Impianti di Climatizzazione</option>
+                                <option>Impianti Fotovoltaici</option>
+                                <option>Impianti di Domotica</option>
+                                <option>Impianti di Sorveglianza e Antifurti</option>
+                                <option>Reti Dati e Impianti TV</option>
+                                <option>Consulenza tecnica</option>
+                            </select>
+                        </label>
+                    </div>
+                    <label><span>Messaggio</span><textarea name="messaggio" rows="5" required></textarea></label>
+                    <label class="form-check"><input type="checkbox" name="privacy" required><span>Ho letto l'<a href="https://www.newsysimpiantielettrici.it/privacy/" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati.</span></label>
+                    <button type="submit" class="btn btn-primary magnetic">Invia richiesta <i class="fas fa-paper-plane"></i></button>
+                    <p class="form-status" data-form-status role="status"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <a href="#home" class="nav-brand" aria-label="New Sys, torna all'inizio"><span class="logo-badge logo-badge-lg"><img src="assets/logo-newsys.png" alt="New Sys s.r.l. Impianti" width="512" height="214"></span></a>
+                <p>Prezzi concorrenziali e alta qualità di materiali e tecnologie garantiscono lavori a regola d'arte e affidabili nel tempo.</p>
+            </div>
+            <div>
+                <h4>Servizi</h4>
+                <ul>
+                    <li><a href="#servizi" data-open-service="elettrici">Impianti elettrici</a></li>
+                    <li><a href="#servizi" data-open-service="clima">Impianti di climatizzazione</a></li>
+                    <li><a href="#servizi" data-open-service="energia">Impianti fotovoltaici</a></li>
+                    <li><a href="#servizi" data-open-service="domotica">Impianti domotici</a></li>
+                    <li><a href="#servizi" data-open-service="sicurezza">Sorveglianza e antifurto</a></li>
+                    <li><a href="#servizi" data-open-service="reti">Reti dati e impianti TV</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contatti</h4>
+                <ul>
+                    <li>Via Guido Motta, 13 · 12036 Revello (CN)</li>
+                    <li><a href="tel:+390175259243">+39 0175 259243</a></li>
+                    <li><a href="tel:+393357027889">+39 335 7027889</a></li>
+                    <li><a href="mailto:newsysimpianti@gmail.com">newsysimpianti@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-legal">
+            <span>© <span data-year>2026</span> New Sys S.r.l. · P.IVA 03238000040</span>
+            <a href="https://www.newsysimpiantielettrici.it/privacy/" target="_blank" rel="noopener">Informativa privacy</a>
+        </div>
+    </footer>
+
+    <!-- Live meter: follows the smart-home load -->
+    <aside class="meter" aria-label="Contatore">
+        <div class="meter-row" aria-hidden="true">
+            <span><small>V</small><b data-live="volt-n">230.0</b></span>
+            <span><small>Hz</small><b data-live="hz-n">50.00</b></span>
+            <span><small>kW</small><b data-live="kw">0.32</b></span>
+        </div>
+        <button class="meter-sound" type="button" data-sound aria-pressed="false" aria-label="Attiva suoni"><i class="fas fa-volume-xmark"></i></button>
+    </aside>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
