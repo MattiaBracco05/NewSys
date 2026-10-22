@@ -975,6 +975,56 @@
     })();
 
     /* ------------------------------------------------------------------
+       About: on phones the list becomes rows of chips sliding with the scroll
+    ------------------------------------------------------------------ */
+    const AboutRows = (() => {
+        const list = $('.about-list');
+        if (reduceMotion || !list) return { update() {} };
+        const mq = window.matchMedia('(max-width: 640px)');
+        const items = $$('li', list);
+        const ROWS = 3;
+        const box = document.createElement('div');
+        box.className = 'about-marquee';
+        box.setAttribute('aria-hidden', 'true');
+        const rows = Array.from({ length: ROWS }, (_, r) => {
+            const row = document.createElement('div');
+            row.className = 'about-row';
+            items.filter((_, i) => i % ROWS === r).forEach((li) => {
+                const chip = document.createElement('span');
+                chip.innerHTML = li.innerHTML;
+                row.appendChild(chip);
+            });
+            box.appendChild(row);
+            return { el: row, span: 0 };
+        });
+        list.after(box);
+        list.classList.add('has-marquee');
+
+        let top = 0, height = 1, smooth = -1;
+        onMeasure(() => {
+            const r = box.getBoundingClientRect();
+            top = r.top + window.scrollY;
+            height = state.vh + r.height;
+            rows.forEach((row) => { row.span = Math.max(0, row.el.offsetWidth - box.clientWidth); });
+            smooth = -1;
+        });
+        const update = () => {
+            if (!mq.matches) return;
+            // 0 when the rows enter from the bottom, 1 when they leave at the top
+            const target = clamp((state.scrollY + state.vh - top) / height, 0, 1);
+            const next = smooth < 0 ? target : lerp(smooth, target, 0.12);
+            if (Math.abs(next - smooth) < 0.0005) return;
+            smooth = next;
+            // alternate directions, like cables pulled through the conduit
+            rows.forEach((row, i) => {
+                const k = i % 2 ? 1 - smooth : smooth;
+                row.el.style.transform = `translate3d(${(-row.span * k).toFixed(1)}px, 0, 0)`;
+            });
+        };
+        return { update };
+    })();
+
+    /* ------------------------------------------------------------------
        Process steps: the line charges up while scrolling
     ------------------------------------------------------------------ */
     const Steps = (() => {
@@ -1037,6 +1087,7 @@
         Sparks.draw();
         Wiring.update();
         Steps.update();
+        AboutRows.update();
         Home.tick(now);
         updateMeter(now);
         requestAnimationFrame(loop);
