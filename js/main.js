@@ -703,6 +703,8 @@
         const main = $('[data-main]');
         const breakers = $$('[data-service]');
         const led = $('[data-panel-led]');
+        const box = $('.epanel');
+        const mmLine = $('[data-mm-line]');
         const screen = $('[data-display]');
         let mainOn = false, current = null;
 
@@ -723,7 +725,13 @@
         const render = () => {
             main.setAttribute('aria-pressed', String(mainOn));
             led.classList.toggle('is-on', mainOn);
+            box.classList.toggle('is-live', mainOn);
             breakers.forEach((b) => b.setAttribute('aria-pressed', String(mainOn && b.dataset.service === current)));
+            // multimeter: which line is drawing
+            const active = breakers.find((b) => b.dataset.service === current);
+            mmLine.textContent = !mainOn ? 'Generale OFF'
+                : active ? `Linea ${breakers.indexOf(active) + 1} · ${$('.breaker-label', active).textContent.trim()}`
+                : 'In tensione';
             if (!mainOn) idle('Linea spenta', 'Alza una levetta del quadro');
             else if (!current) idle('Tensione presente', 'Scegli un servizio dal quadro', 'fa-bolt');
             else show(current);
@@ -769,7 +777,7 @@
         // reference house: 6 kW meter, 8 kWp PV, 10 kWh battery
         const METER_KW = 6, PV_PEAK = 8 * 0.8, BATT_KWH = 10;
         const MODE_LABEL = { off: 'Spento', heat: 'Riscalda', cool: 'Raffresca' };
-        const s = { lights: Object.fromEntries(ROOMS.map((r) => [r, false])), mode: 'off', lastMode: 'heat', temp: 22, hour: 12, alarm: 'off' };
+        const s = { lights: Object.fromEntries(ROOMS.map((r) => [r, false])), mode: 'off', lastMode: 'heat', temp: 22, hour: 12, alarm: 'off', garage: false, car: false, driving: false };
         const roomEls = Object.fromEntries($$('[data-room]', stage).map((el) => [el.dataset.room, el]));
         const switchesBox = $('[data-light-switches]');
         const tip = $('[data-home-tip]');
@@ -784,12 +792,13 @@
         const skyTop = $('[data-sky-top]');
         const skyBottom = $('[data-sky-bottom]');
         const starsG = $('[data-stars]');
-        const cctvHead = $('[data-cctv-head]');
         const energy = $('.energy');
+        const flow = $('[data-flow]');
+        const flowLines = Object.fromEntries($$('[data-flow-line]', flow).map((el) => [el.dataset.flowLine, el]));
         const eOut = {
             load: $('[data-e="load"]'), prod: $('[data-e="prod"]'), grid: $('[data-e="grid"]'),
             gridLabel: $('[data-e="grid-label"]'), bar: $('[data-e="bar"]'),
-            batt: $('[data-e="batt"]'), battLabel: $('[data-e="batt-label"]'),
+            batt: $('[data-e="batt"]'), battLabel: $('[data-e="batt-label"]'), battLevel: $('[data-e="batt-level"]'),
             meter: $('[data-e="meter"]'), meterLabel: $('[data-e="meter-label"]')
         };
         const out = { temp: $('[data-temp-out]'), hour: $('[data-hour-out]'), alarm: $('[data-alarm-out]') };
@@ -817,11 +826,11 @@
         });
         const allBtn = document.createElement('button');
         allBtn.type = 'button';
-        allBtn.className = 'light-switch';
-        allBtn.textContent = 'Tutte';
+        allBtn.className = 'light-switch light-switch-off';
+        allBtn.textContent = 'Generale OFF';
         allBtn.addEventListener('click', () => {
-            const anyOff = ROOMS.some((r) => !s.lights[r]);
-            ROOMS.forEach((r) => { s.lights[r] = anyOff; });
+            stopGarageTimer();
+            ROOMS.forEach((r) => { s.lights[r] = false; });
             interacted(); Sound.play('click'); render();
         });
         switchesBox.appendChild(allBtn);
@@ -831,6 +840,7 @@
             if (!keepScene) scenes.forEach((b) => b.classList.remove('is-active'));
         };
         const toggleLight = (r) => {
+            if (r === 'garage') stopGarageTimer();
             s.lights[r] = !s.lights[r];
             interacted(); Sound.play('click'); render();
         };
@@ -848,9 +858,27 @@
             s.alarm = s.alarm === 'off' ? 'armed' : 'off';
             interacted(); Sound.play(s.alarm === 'armed' ? 'zap' : 'click'); render();
         });
+        let garageTimer = 0;
+        const stopGarageTimer = () => { clearTimeout(garageTimer); garageTimer = 0; };
+        // garage run: door up, the car drives in (or reverses out), door down again
+        let carTimers = [];
+        const parkCar = (inside) => {
+            if (s.car === inside) return;
+            carTimers.forEach(clearTimeout);
+            carTimers = [];
+            const at = (ms, fn) => carTimers.push(setTimeout(() => { fn(); render(); }, ms));
+            // the car only moves once the door is high enough
+            const wait = s.garage ? 0 : 1300;
+            s.garage = true;
+            s.driving = true;
+            at(wait, () => { s.car = inside; });
+            at(wait + 2300, () => { s.driving = false; });
+            at(wait + 2600, () => { s.garage = false; });
+        };
         let alarmTimer = 0;
         intrudeBtn.addEventListener('click', () => {
             if (s.alarm !== 'armed') return;
+            stopGarageTimer();
             s.alarm = 'triggered';
             ROOMS.forEach((r) => { s.lights[r] = true; });
             tip.textContent = 'Intrusione rilevata! Luci accese e notifica inviata allo smartphone';
@@ -865,17 +893,68 @@
             }, 3200);
         });
         const SCENES = {
-            rientro: () => { ROOMS.forEach((r) => { s.lights[r] = r === 'soggiorno' || r === 'cucina'; }); setMode(s.lastMode); s.alarm = 'off'; },
-            esco: () => { ROOMS.forEach((r) => { s.lights[r] = false; }); setMode('off'); s.alarm = 'armed'; },
-            notte: () => { ROOMS.forEach((r) => { s.lights[r] = false; }); setMode('off'); s.alarm = 'armed'; s.hour = 23; hourIn.value = 23; }
+            rientro: () => {
+                ROOMS.forEach((r) => { s.lights[r] = r === 'soggiorno' || r === 'cucina' || r === 'garage'; });
+                setMode(s.lastMode); s.alarm = 'off';
+                parkCar(true);
+                // the garage light switches itself off once the car is parked
+                stopGarageTimer();
+                garageTimer = setTimeout(() => {
+                    garageTimer = 0;
+                    s.lights.garage = false;
+                    tip.classList.add('is-hidden');
+                    render();
+                }, 5000);
+            },
+            esco: () => { stopGarageTimer(); ROOMS.forEach((r) => { s.lights[r] = false; }); setMode('off'); s.alarm = 'armed'; parkCar(false); }
         };
         scenes.forEach((b) => b.addEventListener('click', () => {
             SCENES[b.dataset.scene]();
             interacted();
+            if (garageTimer) {
+                tip.textContent = 'Luce del garage accesa: si spegne da sola tra poco';
+                tip.classList.remove('is-hidden');
+            }
             b.classList.add('is-active');
             Sound.play('zap');
             render();
         }));
+
+        // control windows: panes side by side, the box takes the height of the one on show
+        const tabs = $$('[data-home-tab]');
+        const panesBox = $('[data-home-panes]');
+        const track = $('.home-track', panesBox);
+        const panes = $$('.home-pane', panesBox);
+        let pane = 0;
+        const fitPane = () => { panesBox.style.height = `${panes[pane].offsetHeight}px`; };
+        const showPane = (i, focus) => {
+            pane = clamp(i, 0, panes.length - 1);
+            track.style.transform = `translateX(${-100 * pane}%)`;
+            tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === pane)); t.tabIndex = k === pane ? 0 : -1; });
+            panes.forEach((p, k) => { p.inert = k !== pane; });
+            if (focus) tabs[pane].focus();
+            fitPane();
+        };
+        tabs.forEach((t, k) => {
+            t.addEventListener('click', () => { if (k !== pane) Sound.play('click'); showPane(k); });
+            t.addEventListener('keydown', (e) => {
+                const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+                if (d) { e.preventDefault(); showPane((pane + d + tabs.length) % tabs.length, true); }
+            });
+        });
+        // swipe between panes on touch screens, but not while dragging a slider
+        let swipe = null;
+        panesBox.addEventListener('touchstart', (e) => {
+            swipe = e.target.closest('input') ? null : { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }, { passive: true });
+        panesBox.addEventListener('touchend', (e) => {
+            if (!swipe) return;
+            const dx = e.changedTouches[0].clientX - swipe.x, dy = e.changedTouches[0].clientY - swipe.y;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) showPane(pane + (dx < 0 ? 1 : -1));
+            swipe = null;
+        }, { passive: true });
+        if ('ResizeObserver' in window) panes.forEach((p) => new ResizeObserver(fitPane).observe(p));
+        onMeasure(fitPane);
 
         const mix = (a, b, t) => {
             const pa = a.match(/\w\w/g).map((h) => parseInt(h, 16));
@@ -903,7 +982,6 @@
         const render = () => {
             ROOMS.forEach((r) => roomEls[r].classList.toggle('is-on', s.lights[r]));
             switches.forEach(([r, b]) => b.setAttribute('aria-pressed', String(s.lights[r])));
-            allBtn.setAttribute('aria-pressed', String(ROOMS.every((r) => s.lights[r])));
 
             modeBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.climaMode === s.mode)));
             tempIn.value = s.temp;
@@ -931,6 +1009,10 @@
             solar.classList.toggle('is-producing', prod > 0.2);
             out.hour.textContent = fmtHour(h);
 
+            stage.classList.toggle('is-garage-open', s.garage);
+            stage.classList.toggle('is-car-out', !s.car);
+            stage.classList.toggle('is-driving', s.driving);
+
             // alarm
             stage.classList.toggle('is-armed', s.alarm !== 'off');
             stage.classList.toggle('is-triggered', s.alarm === 'triggered');
@@ -952,26 +1034,28 @@
             eOut.load.textContent = load.toFixed(2);
             eOut.prod.textContent = prod.toFixed(2);
             eOut.batt.textContent = Math.round(soc * 100);
-            eOut.battLabel.textContent = battFlow > 0.01 ? 'Batteria in carica' : battFlow < -0.01 ? 'Batteria in uso' : 'Batteria';
+            eOut.battLevel.style.width = `${Math.round(soc * 100)}%`;
+            eOut.battLabel.textContent = battFlow > 0.01 ? 'In carica' : battFlow < -0.01 ? 'In uso' : 'Batteria';
             eOut.grid.textContent = Math.abs(grid).toFixed(2);
-            eOut.gridLabel.textContent = grid >= 0 ? 'Dalla rete' : 'In rete';
+            eOut.gridLabel.textContent = grid >= 0 ? 'Dalla rete' : 'Immessa in rete';
             eOut.meterLabel.textContent = grid >= 0 ? 'Prelievo dal contatore' : 'Immissione in rete';
             eOut.meter.textContent = grid >= 0 ? `${grid.toFixed(1)} / ${METER_KW} kW` : `${(-grid).toFixed(1)} kW`;
             energy.classList.toggle('is-export', grid < 0);
+            flow.classList.toggle('is-export', grid < -0.01);
+            // dashes run left to right; reversed when energy flows into the battery or comes from the grid
+            const setLine = (name, on, rev) => {
+                flowLines[name].classList.toggle('is-on', on);
+                flowLines[name].classList.toggle('is-rev', on && rev);
+            };
+            setLine('pv', prod > 0.05, false);
+            setLine('batt', Math.abs(battFlow) > 0.01, battFlow > 0);
+            setLine('grid', Math.abs(grid) > 0.01, grid > 0);
             eOut.bar.style.width = `${clamp(grid >= 0 ? (grid / METER_KW) * 100 : (-grid / PV_PEAK) * 100, 2, 100)}%`;
             state.load = grid;
             Sound.setLoad(Math.max(0, grid));
         };
 
-        // CCTV sweep, only while armed and on screen
-        let visible = false;
-        if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { visible = en.isIntersecting; }).observe(stage);
-        const tick = (now) => {
-            if (!visible || s.alarm === 'off' || reduceMotion) return;
-            cctvHead.setAttribute('transform', `rotate(${(Math.sin(now / 900) * 12 - 4).toFixed(2)})`);
-        };
         render();
-        return { tick };
     })();
 
     /* ------------------------------------------------------------------
@@ -1022,6 +1106,43 @@
             });
         };
         return { update };
+    })();
+
+    /* ------------------------------------------------------------------
+       Brands: endless logo strip, filterable by category
+    ------------------------------------------------------------------ */
+    (() => {
+        const strip = $('[data-brands]');
+        if (!strip) return;
+        const set = $('.brands-set', strip);
+        const filters = $$('[data-brand-filter]');
+        let clones = [];
+        const fill = () => {
+            if (reduceMotion) return;
+            clones.forEach((c) => c.remove());
+            // one set plus enough copies to cover the screen while the first slides out
+            const w = set.offsetWidth || 1;
+            clones = Array.from({ length: Math.ceil(strip.offsetWidth / w) }, () => {
+                const c = set.cloneNode(true);
+                c.setAttribute('aria-hidden', 'true');
+                strip.appendChild(c);
+                return c;
+            });
+            strip.style.setProperty('--brands-dur', `${(w / 45).toFixed(1)}s`);
+            strip.classList.add('is-looping');
+        };
+        filters.forEach((b) => b.addEventListener('click', () => {
+            const cat = b.dataset.brandFilter;
+            filters.forEach((f) => {
+                f.classList.toggle('is-active', f === b);
+                f.setAttribute('aria-pressed', String(f === b));
+            });
+            $$('[data-cat]', set).forEach((li) => { li.hidden = cat !== 'all' && li.dataset.cat !== cat; });
+            strip.dataset.filter = cat;
+            Sound.play('click');
+            fill();
+        }));
+        onMeasure(fill);
     })();
 
     /* ------------------------------------------------------------------
@@ -1088,7 +1209,6 @@
         Wiring.update();
         Steps.update();
         AboutRows.update();
-        Home.tick(now);
         updateMeter(now);
         requestAnimationFrame(loop);
     };

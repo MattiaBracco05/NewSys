@@ -209,50 +209,62 @@
         <section class="section" id="servizi">
             <div class="container">
                 <div class="section-head reveal">
-                    <span class="kicker">I nostri servizi</span>
                     <h2 data-decode>Il quadro dei servizi</h2>
                     <p>Ogni interruttore è un servizio. Alza una levetta per accendere la linea e scoprire cosa possiamo fare per te.</p>
                 </div>
                 <div class="panel-wrap reveal">
-                    <div class="epanel" role="group" aria-label="Quadro elettrico dei servizi">
-                        <div class="epanel-head">
-                            <span class="epanel-brand">NEW SYS · QE-01</span>
-                            <span class="epanel-led" data-panel-led></span>
+                        <div class="epanel" role="group" aria-label="Quadro elettrico dei servizi">
+                            <span class="epanel-screw tl"></span><span class="epanel-screw tr"></span><span class="epanel-screw bl"></span><span class="epanel-screw br"></span>
+                            <div class="epanel-head">
+                                <span class="epanel-brand">NEW SYS · QE-01</span>
+                                <span class="epanel-led" data-panel-led></span>
+                            </div>
+                            <!-- row 1: main switch (2 modules) + multimeter (4 modules) -->
+                            <div class="epanel-row epanel-row-top">
+                                <button class="breaker breaker-main" type="button" data-main aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-power-off"></i>Generale</span>
+                                </button>
+                                <div class="mm" aria-hidden="true">
+                                    <span class="breaker-led"></span>
+                                    <span class="mm-body"><span class="mm-screen">
+                                        <span class="mm-row"><b data-live="volt">230.0 V</b><b data-live="hz">50.00 Hz</b></span>
+                                        <span class="mm-line" data-mm-line>GENERALE OFF</span>
+                                    </span></span>
+                                    <span class="breaker-label"><i class="fas fa-gauge-high"></i>Multimetro</span>
+                                </div>
+                            </div>
+                            <!-- row 2: one line per service -->
+                            <div class="epanel-row">
+                                <button class="breaker" type="button" data-service="elettrici" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-plug"></i>Elettrici</span>
+                                </button>
+                                <button class="breaker" type="button" data-service="clima" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-temperature-half"></i>Termotecnica</span>
+                                </button>
+                                <button class="breaker" type="button" data-service="energia" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-solar-panel"></i>Solare</span>
+                                </button>
+                                <button class="breaker" type="button" data-service="domotica" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-house-signal"></i>Domotica</span>
+                                </button>
+                                <button class="breaker" type="button" data-service="sicurezza" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-shield-halved"></i>Sicurezza</span>
+                                </button>
+                                <button class="breaker" type="button" data-service="reti" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-label"><i class="fas fa-satellite-dish"></i>Reti e TV</span>
+                                </button>
+                            </div>
+                            <div class="epanel-foot">
+                                <span>230/400 V ~ 50 Hz</span><span>IP40</span><span>CEI 64-8</span>
+                            </div>
                         </div>
-                        <div class="epanel-rail">
-                            <button class="breaker breaker-main" type="button" data-main aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label">Generale</span>
-                            </button>
-                            <button class="breaker" type="button" data-service="elettrici" aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label"><i class="fas fa-plug"></i>Elettrici</span>
-                            </button>
-                            <button class="breaker" type="button" data-service="clima" aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label"><i class="fas fa-temperature-half"></i>Termotecnica</span>
-                            </button>
-                            <button class="breaker" type="button" data-service="energia" aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label"><i class="fas fa-solar-panel"></i>Solare</span>
-                            </button>
-                            <button class="breaker" type="button" data-service="domotica" aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label"><i class="fas fa-house-signal"></i>Domotica</span>
-                            </button>
-                            <button class="breaker" type="button" data-service="sicurezza" aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label"><i class="fas fa-shield-halved"></i>Sicurezza</span>
-                            </button>
-                            <button class="breaker" type="button" data-service="reti" aria-pressed="false">
-                                <span class="breaker-body"><span class="breaker-lever"></span></span>
-                                <span class="breaker-label"><i class="fas fa-satellite-dish"></i>Reti e TV</span>
-                            </button>
-                        </div>
-                        <div class="epanel-foot">
-                            <span>230/400 V ~ 50 Hz</span><span>IP40</span><span>CEI 64-8</span>
-                        </div>
-                    </div>
 
                     <div class="display" aria-live="polite">
                         <div class="display-screen" data-display>
@@ -271,14 +283,13 @@
         <section class="section section-alt" id="domotica">
             <div class="container">
                 <div class="section-head reveal">
-                    <span class="kicker">Esperienza interattiva</span>
                     <h2 data-decode>Prendi il controllo della casa</h2>
-                    <p>Una casa con impianto elettrico, clima, fotovoltaico, domotica e antifurto firmati New Sys. Tocca le stanze, cambia l'ora del giorno, attiva l'allarme: il contatore in basso segue ogni tua scelta.</p>
+                    <p>Una casa con impianto elettrico, clima, fotovoltaico, domotica, TVCC e antifurto firmati New Sys. Da un pannello gestisci luci e sicurezza, dall'altro guardi come si muove l'energia tra fotovoltaico, batteria e rete.</p>
                 </div>
 
                 <div class="home-lab reveal">
-                    <div class="home-stage" data-home>
-                        <svg viewBox="0 0 800 520" class="home-svg" role="img" aria-label="Casa interattiva in sezione con cinque stanze, pannelli solari e telecamera">
+                    <div class="home-stage is-car-out" data-home>
+                        <svg viewBox="0 0 800 520" class="home-svg" role="img" aria-label="Casa interattiva in sezione con cinque stanze, pannelli solari, telecamere e sensori di movimento">
                             <defs>
                                 <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0" data-sky-top stop-color="#0a1033"/>
@@ -289,9 +300,17 @@
                                     <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
                                 </radialGradient>
                                 <linearGradient id="cam-cone" x1="1" y1="0" x2="0" y2="1">
-                                    <stop offset="0" stop-color="#ff4d4d" stop-opacity=".55"/>
+                                    <stop offset="0" stop-color="#4fd8ff" stop-opacity=".4"/>
+                                    <stop offset="1" stop-color="#4fd8ff" stop-opacity="0"/>
+                                </linearGradient>
+                                <linearGradient id="cam-cone-alert" x1="1" y1="0" x2="0" y2="1">
+                                    <stop offset="0" stop-color="#ff4d4d" stop-opacity=".6"/>
                                     <stop offset="1" stop-color="#ff4d4d" stop-opacity="0"/>
                                 </linearGradient>
+                                <radialGradient id="lamp-glow">
+                                    <stop offset="0" stop-color="#ffd27a" stop-opacity=".75"/>
+                                    <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+                                </radialGradient>
                                 <radialGradient id="sun-glow">
                                     <stop offset="0" stop-color="#ffd76b" stop-opacity=".9"/>
                                     <stop offset="1" stop-color="#ffb320" stop-opacity="0"/>
@@ -330,29 +349,73 @@
                             <!-- rooms -->
                             <g class="room" data-room="camera" tabindex="0" role="button" aria-label="Luce camera">
                                 <rect x="150" y="152" width="225" height="140" class="room-bg"/>
-                                <polygon points="250,190 200,292 325,292 275,190" class="room-cone"/>
-                                <line x1="262" y1="152" x2="262" y2="180" class="lamp-wire"/>
-                                <circle cx="262" cy="185" r="7" class="lamp"/>
-                                <rect x="165" y="250" width="110" height="34" rx="5" class="furn"/>
-                                <rect x="165" y="238" width="26" height="16" rx="4" class="furn"/>
+                                <!-- bedside lamp on the nightstand -->
+                                <circle cx="294" cy="246" r="72" class="room-cone room-glow"/>
+                                <!-- bed, side view: headboard by the nightstand -->
+                                <rect x="166" y="266" width="108" height="14" rx="2" class="furn"/>
+                                <rect x="160" y="250" width="7" height="34" rx="2" class="furn"/>
+                                <rect x="272" y="226" width="8" height="58" rx="2" class="furn"/>
+                                <rect x="244" y="241" width="26" height="12" rx="5" class="furn"/>
+                                <path d="M166 252h80q4 0 4 4v10h-84z" class="furn"/>
+                                <path d="M172 259h66M168 280v4M270 280v4" class="furn-line"/>
+                                <!-- nightstand, wardrobe -->
+                                <rect x="282" y="262" width="24" height="22" rx="2" class="furn"/>
+                                <rect x="316" y="200" width="50" height="84" rx="2" class="furn"/>
+                                <path d="M341 204v76M337 236v10M345 236v10M286 272h16" class="furn-line"/>
+                                <line x1="294" y1="262" x2="294" y2="250" class="lamp-wire"/>
+                                <polygon points="285,250 303,250 299,238 289,238" class="lamp"/>
                                 <text x="162" y="172" class="room-name">CAMERA</text>
+                                <!-- AC unit -->
+                                <g class="ac">
+                                    <rect x="282" y="160" width="66" height="20" rx="5"/>
+                                    <path d="M290 186q12 10 0 20M307 186q12 10 0 20M324 186q12 10 0 20" class="ac-air"/>
+                                </g>
                             </g>
                             <g class="room" data-room="bagno" tabindex="0" role="button" aria-label="Luce bagno">
                                 <rect x="385" y="152" width="225" height="140" class="room-bg"/>
-                                <polygon points="485,190 440,292 555,292 510,190" class="room-cone"/>
-                                <line x1="497" y1="152" x2="497" y2="180" class="lamp-wire"/>
-                                <circle cx="497" cy="185" r="7" class="lamp"/>
-                                <rect x="520" y="248" width="76" height="36" rx="12" class="furn"/>
-                                <rect x="410" y="244" width="34" height="40" rx="4" class="furn"/>
+                                <!-- light bar over the mirror -->
+                                <polygon points="407,201 447,201 472,292 393,292" class="room-cone"/>
+                                <!-- vanity with tap -->
+                                <rect x="410" y="252" width="34" height="32" rx="2" class="furn"/>
+                                <rect x="406" y="247" width="42" height="5" rx="2" class="furn"/>
+                                <path d="M433 247v-7h-6M427 257v22" class="furn-line"/>
+                                <!-- toilet, side view -->
+                                <rect x="487" y="224" width="13" height="32" rx="2" class="furn"/>
+                                <rect x="461" y="253" width="29" height="4" rx="2" class="furn"/>
+                                <path d="M463 257q1 13 11 16v11h14v-27z" class="furn"/>
+                                <!-- bathtub with shower -->
+                                <path d="M515 252h86v14q0 16-16 16h-54q-16 0-16-16z" class="furn"/>
+                                <path d="M594 252v-50h-12" class="furn-line"/>
+                                <path d="M574 199h12l-2 6h-8z" class="furn"/>
+                                <path d="M577 211v6M580 214v6M583 211v6" class="water"/>
+                                <rect x="411" y="205" width="32" height="33" rx="3" class="mirror"/>
+                                <rect x="407" y="196" width="40" height="5" rx="2" class="lamp"/>
                                 <text x="397" y="172" class="room-name">BAGNO</text>
                             </g>
                             <g class="room" data-room="soggiorno" tabindex="0" role="button" aria-label="Luce soggiorno">
                                 <rect x="150" y="302" width="265" height="170" class="room-bg"/>
-                                <polygon points="270,342 205,472 360,472 295,342" class="room-cone"/>
-                                <line x1="282" y1="302" x2="282" y2="332" class="lamp-wire"/>
-                                <circle cx="282" cy="337" r="8" class="lamp"/>
-                                <rect x="175" y="432" width="130" height="32" rx="8" class="furn"/>
-                                <rect x="330" y="410" width="60" height="40" rx="3" class="furn tv" data-tv/>
+                                <!-- floor lamp next to the sofa -->
+                                <polygon points="161,388 183,388 245,472 150,472" class="room-cone"/>
+                                <line x1="172" y1="388" x2="172" y2="470" class="lamp-wire"/>
+                                <ellipse cx="172" cy="470" rx="10" ry="3" class="furn"/>
+                                <polygon points="161,388 183,388 178,371 166,371" class="lamp"/>
+                                <!-- picture on the wall -->
+                                <rect x="230" y="362" width="46" height="30" rx="2" class="frame"/>
+                                <path d="M234 388l11-12 8 8 6-5 13 9" class="furn-line"/>
+                                <!-- sofa: back, cushions, seat, arms -->
+                                <rect x="198" y="418" width="112" height="26" rx="7" class="furn"/>
+                                <rect x="192" y="440" width="124" height="16" rx="4" class="furn"/>
+                                <rect x="187" y="430" width="13" height="28" rx="5" class="furn"/>
+                                <rect x="308" y="430" width="13" height="28" rx="5" class="furn"/>
+                                <path d="M254 422v18M212 440h84M198 456v8M310 456v8" class="furn-line"/>
+                                <!-- TV on its cabinet -->
+                                <rect x="330" y="402" width="62" height="38" rx="3" class="tv" data-tv/>
+                                <path d="M361 440v6" class="furn-line"/>
+                                <rect x="326" y="446" width="70" height="20" rx="2" class="furn"/>
+                                <path d="M361 450v12" class="furn-line"/>
+                                <!-- plant in the corner -->
+                                <path d="M398 452h14l-2 14h-10z" class="furn"/>
+                                <path d="M405 452q-9-12-4-24M405 452q8-10 6-22M405 452q-2-14 2-30" class="leaf"/>
                                 <text x="162" y="322" class="room-name">SOGGIORNO</text>
                                 <!-- AC unit -->
                                 <g class="ac" data-ac>
@@ -362,28 +425,71 @@
                             </g>
                             <g class="room" data-room="cucina" tabindex="0" role="button" aria-label="Luce cucina">
                                 <rect x="425" y="302" width="185" height="170" class="room-bg"/>
-                                <polygon points="505,342 460,472 580,472 530,342" class="room-cone"/>
-                                <line x1="517" y1="302" x2="517" y2="332" class="lamp-wire"/>
-                                <circle cx="517" cy="337" r="8" class="lamp"/>
-                                <rect x="440" y="420" width="155" height="44" rx="3" class="furn"/>
+                                <polygon points="455,342 428,472 530,472 480,342" class="room-cone"/>
+                                <line x1="467" y1="302" x2="467" y2="332" class="lamp-wire"/>
+                                <circle cx="467" cy="337" r="8" class="lamp"/>
+                                <!-- hood over the hob -->
+                                <rect x="519" y="302" width="12" height="68" class="furn"/>
+                                <path d="M507 384h36l-6-14h-24z" class="furn"/>
+                                <!-- base units: worktop, tap, pot on the hob, oven -->
+                                <rect x="432" y="430" width="132" height="36" rx="2" class="furn"/>
+                                <rect x="428" y="424" width="140" height="6" rx="2" class="furn"/>
+                                <path d="M448 424v-12h9v4M470 434v28M500 434v28M554 434v28" class="furn-line"/>
+                                <rect x="513" y="410" width="24" height="14" rx="2" class="furn"/>
+                                <path d="M508 414h5M537 414h5" class="furn-line"/>
+                                <rect x="506" y="437" width="44" height="23" rx="3" class="oven"/>
+                                <!-- fridge -->
+                                <rect x="572" y="370" width="32" height="96" rx="3" class="furn"/>
+                                <path d="M572 402h32M578 380v13M578 410v18" class="furn-line"/>
                                 <text x="437" y="322" class="room-name">CUCINA</text>
                             </g>
                             <g class="room" data-room="garage" tabindex="0" role="button" aria-label="Luce garage">
                                 <rect x="628" y="360" width="124" height="112" class="room-bg"/>
-                                <polygon points="680,390 645,472 735,472 700,390" class="room-cone"/>
-                                <line x1="690" y1="360" x2="690" y2="380" class="lamp-wire"/>
-                                <circle cx="690" cy="385" r="6" class="lamp"/>
-                                <rect x="644" y="440" width="92" height="26" rx="10" class="furn"/>
+                                <!-- waterproof LED batten on the ceiling -->
+                                <polygon points="662,369 718,369 750,472 630,472" class="room-cone"/>
+                                <path d="M668 360v3M712 360v3" class="lamp-wire"/>
+                                <rect x="660" y="363" width="60" height="6" rx="3" class="lamp"/>
+                                <!-- car: drives in/out with the scenes, front facing left -->
+                                <g class="car">
+                                    <polygon points="646,451 630,446 630,464 646,459" class="car-beam"/>
+                                    <path d="M664 448L676 434H710L722 448Z" class="car-body"/>
+                                    <rect x="646" y="447" width="88" height="17" rx="5" class="car-body"/>
+                                    <path d="M670 446L679 437H692V446ZM696 446V437H708L716 446Z" class="car-glass"/>
+                                    <rect x="646" y="451" width="4" height="4" rx="1" class="car-head"/>
+                                    <rect x="730" y="451" width="4" height="5" rx="1" class="car-tail"/>
+                                    <circle cx="666" cy="465" r="7" class="car-wheel"/>
+                                    <circle cx="714" cy="465" r="7" class="car-wheel"/>
+                                </g>
                                 <text x="636" y="378" class="room-name">GARAGE</text>
                             </g>
+                            <!-- sectional garage door: rolls up with "Entro in casa", down with "Esco di casa" -->
+                            <g class="garage-door">
+                                <rect x="630" y="388" width="120" height="84" class="door-panels"/>
+                                <path d="M630 409H750M630 430H750M630 451H750" class="door-lines"/>
+                                <rect x="682" y="459" width="16" height="4" rx="2" class="door-handle"/>
+                            </g>
+
+                            <!-- IR motion sensors, one per room: they arm with the alarm -->
+                            <g class="pir" transform="translate(368 158) rotate(40)"><path d="M0 0L-69 98A120 120 0 0 0 69 98Z" class="pir-fan"/><path d="M-7 -4h14v4a7 7 0 0 1-14 0z" class="pir-body"/><circle cy="2" r="2.6" class="pir-lens"/></g>
+                            <g class="pir" transform="translate(603 158) rotate(40)"><path d="M0 0L-69 98A120 120 0 0 0 69 98Z" class="pir-fan"/><path d="M-7 -4h14v4a7 7 0 0 1-14 0z" class="pir-body"/><circle cy="2" r="2.6" class="pir-lens"/></g>
+                            <g class="pir" transform="translate(157 308) rotate(-40)"><path d="M0 0L-69 98A120 120 0 0 0 69 98Z" class="pir-fan"/><path d="M-7 -4h14v4a7 7 0 0 1-14 0z" class="pir-body"/><circle cy="2" r="2.6" class="pir-lens"/></g>
+                            <g class="pir" transform="translate(603 308) rotate(40)"><path d="M0 0L-69 98A120 120 0 0 0 69 98Z" class="pir-fan"/><path d="M-7 -4h14v4a7 7 0 0 1-14 0z" class="pir-body"/><circle cy="2" r="2.6" class="pir-lens"/></g>
+                            <g class="pir" transform="translate(745 366) rotate(40) scale(.8)"><path d="M0 0L-69 98A120 120 0 0 0 69 98Z" class="pir-fan"/><path d="M-7 -4h14v4a7 7 0 0 1-14 0z" class="pir-body"/><circle cy="2" r="2.6" class="pir-lens"/></g>
 
                             <!-- door + sensor -->
                             <circle cx="620" cy="370" r="5" class="sensor" data-sensor/>
 
-                            <!-- CCTV -->
-                            <g class="cctv" data-cctv transform="translate(136 300)">
+                            <!-- CCTV: always recording, outside the house -->
+                            <g class="cctv" transform="translate(136 300)">
                                 <g data-cctv-head>
-                                    <polygon points="0,0 -150,150 -40,180" class="cctv-cone" fill="url(#cam-cone)"/>
+                                    <polygon points="0,0 -150,150 -40,180" class="cctv-cone"/>
+                                    <rect x="-24" y="-7" width="28" height="14" rx="3" class="cctv-body"/>
+                                    <circle cx="-22" cy="0" r="3" class="cctv-led"/>
+                                </g>
+                            </g>
+                            <g class="cctv" transform="translate(626 150) scale(-1 1)">
+                                <g data-cctv-head>
+                                    <polygon points="0,0 -150,150 -40,180" class="cctv-cone"/>
                                     <rect x="-24" y="-7" width="28" height="14" rx="3" class="cctv-body"/>
                                     <circle cx="-22" cy="0" r="3" class="cctv-led"/>
                                 </g>
@@ -394,58 +500,84 @@
                         <div class="home-tip" data-home-tip>Tocca una stanza per accendere la luce</div>
                     </div>
 
+                    <!-- Two control windows sliding side by side -->
                     <div class="home-controls">
-                        <div class="ctrl-group">
-                            <h3><i class="fas fa-wand-magic-sparkles"></i> Scenari</h3>
-                            <div class="scenes">
-                                <button type="button" class="chip" data-scene="rientro"><i class="fas fa-house"></i> Rientro</button>
-                                <button type="button" class="chip" data-scene="esco"><i class="fas fa-door-open"></i> Esco</button>
-                                <button type="button" class="chip" data-scene="notte"><i class="fas fa-moon"></i> Notte</button>
+                        <div class="home-tabs" role="tablist" aria-label="Pannelli di controllo della casa">
+                            <button type="button" role="tab" id="home-tab-0" aria-controls="home-pane-0" aria-selected="true" data-home-tab><i class="fas fa-shield-halved"></i> Luci e sicurezza</button>
+                            <button type="button" role="tab" id="home-tab-1" aria-controls="home-pane-1" aria-selected="false" tabindex="-1" data-home-tab><i class="fas fa-solar-panel"></i> Energia e clima</button>
+                        </div>
+                        <div class="home-panes" data-home-panes>
+                            <div class="home-track">
+                                <div class="home-pane" role="tabpanel" id="home-pane-0" aria-labelledby="home-tab-0">
+                                    <div class="ctrl-group">
+                                        <h3><i class="fas fa-wand-magic-sparkles"></i> Scenari</h3>
+                                        <div class="scenes">
+                                            <button type="button" class="chip" data-scene="rientro"><i class="fas fa-house"></i> Entro in casa</button>
+                                            <button type="button" class="chip" data-scene="esco"><i class="fas fa-door-open"></i> Esco di casa</button>
+                                        </div>
+                                    </div>
+                                    <div class="ctrl-group">
+                                        <h3><i class="fas fa-lightbulb"></i> Luci</h3>
+                                        <div class="light-switches" data-light-switches></div>
+                                    </div>
+                                    <div class="ctrl-group">
+                                        <h3><i class="fas fa-shield-halved"></i> Antifurto <output data-alarm-out>Disinserito</output></h3>
+                                        <div class="ctrl-row">
+                                            <button type="button" class="toggle" data-alarm aria-pressed="false"><span></span>Inserisci</button>
+                                            <button type="button" class="chip chip-danger" data-intrude disabled><i class="fas fa-person-running"></i> Simula intrusione</button>
+                                        </div>
+                                        <ul class="sec-legend">
+                                            <li class="is-home"><i class="fas fa-wand-magic-sparkles"></i> Scenari domotici in grado di interfacciarsi con antifurto, climatizzazione e molto altro</li>
+                                            <li class="is-home"><i class="fas fa-mobile-screen"></i> Luci domotiche controllabili da remoto tramite APP o con assistenti vocali</li>
+                                            <li><i class="fas fa-video"></i> TVCC: registrazione 24/7 con possibilità di pre-allarme</li>
+                                            <li><i class="fas fa-satellite-dish"></i> Sensori IR attivi con l'antifurto inserito</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="home-pane" role="tabpanel" id="home-pane-1" aria-labelledby="home-tab-1" inert>
+                                    <div class="ctrl-group">
+                                        <h3><i class="fas fa-sun"></i> Ora del giorno <output data-hour-out>12:00</output></h3>
+                                        <label class="range-field">
+                                            <input type="range" min="0" max="24" value="12" step="0.25" data-hour aria-label="Ora del giorno">
+                                            <span class="range-scale"><span><i class="fas fa-moon"></i> 00:00</span><span>12:00</span><span>24:00 <i class="fas fa-moon"></i></span></span>
+                                        </label>
+                                    </div>
+                                    <div class="ctrl-group">
+                                        <h3><i class="fas fa-bolt"></i> Flussi di energia</h3>
+                                        <div class="flow" data-flow>
+                                            <div class="flow-node flow-pv"><i class="fas fa-solar-panel"></i><b><span data-e="prod">0.00</span> kW</b><small>Fotovoltaico</small></div>
+                                            <span class="flow-line" data-flow-line="pv"></span>
+                                            <div class="flow-node flow-batt"><i class="fas fa-car-battery"></i><b><span data-e="batt">0</span>%</b><small data-e="batt-label">Batteria</small><span class="flow-level"><span data-e="batt-level"></span></span></div>
+                                            <span class="flow-line" data-flow-line="batt"></span>
+                                            <div class="flow-node flow-home"><i class="fas fa-house"></i><b><span data-e="load">0.00</span> kW</b><small>Consumo casa</small></div>
+                                            <span class="flow-line" data-flow-line="grid"></span>
+                                            <div class="flow-node flow-grid"><i class="fas fa-tower-broadcast"></i><b><span data-e="grid">0.00</span> kW</b><small data-e="grid-label">Dalla rete</small></div>
+                                        </div>
+                                    </div>
+                                    <div class="ctrl-group">
+                                        <h3><i class="fas fa-temperature-half"></i> Clima <output data-temp-out>Spento</output></h3>
+                                        <div class="ctrl-row">
+                                            <button type="button" class="chip" data-clima-mode="off" aria-pressed="true"><i class="fas fa-power-off"></i> Spento</button>
+                                            <button type="button" class="chip chip-heat" data-clima-mode="heat" aria-pressed="false"><i class="fas fa-fire"></i> Riscalda</button>
+                                            <button type="button" class="chip chip-cool" data-clima-mode="cool" aria-pressed="false"><i class="fas fa-snowflake"></i> Raffresca</button>
+                                        </div>
+                                        <label class="range-field">
+                                            <input type="range" min="16" max="30" value="22" step="1" data-temp aria-label="Temperatura impostata">
+                                            <span class="range-scale"><span>16 °C</span><span>30 °C</span></span>
+                                        </label>
+                                    </div>
+                                    <div class="energy">
+                                        <div class="energy-meter"><small data-e="meter-label">Prelievo dal contatore</small><span data-e="meter">0.0 / 6 kW</span></div>
+                                        <div class="energy-bar"><span data-e="bar"></span></div>
+                                        <ul class="energy-spec">
+                                            <li><i class="fas fa-gauge-high"></i> Contatore 6 kW</li>
+                                            <li><i class="fas fa-solar-panel"></i> Fotovoltaico 8 kWp</li>
+                                            <li><i class="fas fa-car-battery"></i> Accumulo 10 kWh</li>
+                                        </ul>
+                                        <p class="energy-note">Simulazione indicativa di una villetta</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="ctrl-group">
-                            <h3><i class="fas fa-lightbulb"></i> Luci</h3>
-                            <div class="light-switches" data-light-switches></div>
-                        </div>
-                        <div class="ctrl-group">
-                            <h3><i class="fas fa-temperature-half"></i> Clima <output data-temp-out>Spento</output></h3>
-                            <div class="ctrl-row">
-                                <button type="button" class="chip" data-clima-mode="off" aria-pressed="true"><i class="fas fa-power-off"></i> Spento</button>
-                                <button type="button" class="chip chip-heat" data-clima-mode="heat" aria-pressed="false"><i class="fas fa-fire"></i> Riscalda</button>
-                                <button type="button" class="chip chip-cool" data-clima-mode="cool" aria-pressed="false"><i class="fas fa-snowflake"></i> Raffresca</button>
-                            </div>
-                            <label class="range-field">
-                                <input type="range" min="16" max="30" value="22" step="1" data-temp aria-label="Temperatura impostata">
-                                <span class="range-scale"><span>16 °C</span><span>30 °C</span></span>
-                            </label>
-                        </div>
-                        <div class="ctrl-group">
-                            <h3><i class="fas fa-sun"></i> Ora del giorno <output data-hour-out>12:00</output></h3>
-                            <label class="range-field">
-                                <input type="range" min="0" max="24" value="12" step="0.25" data-hour aria-label="Ora del giorno">
-                                <span class="range-scale"><span><i class="fas fa-moon"></i> 00:00</span><span>12:00</span><span>24:00 <i class="fas fa-moon"></i></span></span>
-                            </label>
-                        </div>
-                        <div class="ctrl-group">
-                            <h3><i class="fas fa-shield-halved"></i> Antifurto <output data-alarm-out>Disinserito</output></h3>
-                            <div class="ctrl-row">
-                                <button type="button" class="toggle" data-alarm aria-pressed="false"><span></span>Inserisci</button>
-                                <button type="button" class="chip chip-danger" data-intrude disabled><i class="fas fa-person-running"></i> Simula intrusione</button>
-                            </div>
-                        </div>
-                        <div class="energy">
-                            <ul class="energy-spec">
-                                <li><i class="fas fa-gauge-high"></i> Contatore 6 kW</li>
-                                <li><i class="fas fa-solar-panel"></i> Fotovoltaico 8 kWp</li>
-                                <li><i class="fas fa-car-battery"></i> Accumulo 10 kWh</li>
-                            </ul>
-                            <div><small>Consumo</small><b data-e="load">0.00</b><em>kW</em></div>
-                            <div><small>Produzione</small><b data-e="prod">0.00</b><em>kW</em></div>
-                            <div><small data-e="batt-label">Batteria</small><b data-e="batt">0</b><em>%</em></div>
-                            <div><small data-e="grid-label">Dalla rete</small><b data-e="grid">0.00</b><em>kW</em></div>
-                            <div class="energy-meter"><small data-e="meter-label">Prelievo dal contatore</small><span data-e="meter">0.0 / 6 kW</span></div>
-                            <div class="energy-bar"><span data-e="bar"></span></div>
-                            <p class="energy-note">Simulazione indicativa di una villetta</p>
                         </div>
                     </div>
                 </div>
@@ -456,7 +588,6 @@
         <section class="section section-alt" id="chi-siamo">
             <div class="container about">
                 <div class="about-text reveal">
-                    <span class="kicker">Chi siamo</span>
                     <h2 data-decode>Elettricisti esperti, servizi di qualità</h2>
                     <p>Dal 2008 New Sys si occupa dell'installazione e della manutenzione di impianti elettrici civili e industriali: dall'elettrico all'antintrusione, dal fotovoltaico alla quadristica industriale, fino a videocitofoni, reti LAN e automazione.</p>
                     <p>Operiamo a Cuneo e provincia e interveniamo per manutenzioni e riparazioni anche fuori zona. Il nostro obiettivo è sempre lo stesso: impianti all'avanguardia, materiali certificati e manodopera qualificata.</p>
@@ -485,11 +616,46 @@
             </div>
         </section>
 
+        <!-- BRANDS: one logo strip ordered by category, filterable with the chips; brand-first opens a group.
+             Logos in assets/images/brands-web are trimmed copies of assets/images/brand, sized to a similar visual area. -->
+        <section class="brands" id="marchi" aria-labelledby="brands-title">
+            <div class="container brands-head reveal">
+                <h2 id="brands-title">I marchi più installati</h2>
+                <div class="brands-filter" role="group" aria-label="Filtra i marchi per categoria">
+                    <button type="button" class="chip is-active" data-brand-filter="all" aria-pressed="true">Tutti</button>
+                    <button type="button" class="chip" data-brand-filter="elettrico" aria-pressed="false"><i class="fas fa-plug"></i> Elettrico</button>
+                    <button type="button" class="chip" data-brand-filter="clima" aria-pressed="false"><i class="fas fa-temperature-half"></i> Termotecnica</button>
+                    <button type="button" class="chip" data-brand-filter="sicurezza" aria-pressed="false"><i class="fas fa-shield-halved"></i> Sicurezza</button>
+                    <button type="button" class="chip" data-brand-filter="automazione" aria-pressed="false"><i class="fas fa-gears"></i> Automazione</button>
+                </div>
+            </div>
+            <div class="brands-strip" data-brands data-filter="all">
+                <ul class="brands-set">
+                    <li class="brand brand-first" data-cat="elettrico"><img src="assets/images/brands-web/bticino.png" alt="BTicino" width="157" height="33"></li>
+                    <li class="brand" data-cat="elettrico"><img src="assets/images/brands-web/vimar.png" alt="Vimar" width="145" height="36"></li>
+                    <li class="brand" data-cat="elettrico"><img src="assets/images/brands-web/schneider.png" alt="Schneider Electric" width="133" height="39"></li>
+                    <li class="brand brand-first" data-cat="clima"><img src="assets/images/brands-web/daikin.png" alt="Daikin" width="158" height="33"></li>
+                    <li class="brand" data-cat="clima"><img src="assets/images/brands-web/mitsubishi.png" alt="Mitsubishi Electric" width="111" height="47"></li>
+                    <li class="brand" data-cat="clima"><img src="assets/images/brands-web/lg.png" alt="LG" width="109" height="48"></li>
+                    <li class="brand" data-cat="clima"><img src="assets/images/brands-web/samsung.png" alt="Samsung" width="181" height="29"></li>
+                    <li class="brand" data-cat="clima"><img src="assets/images/brands-web/fujitsu.png" alt="Fujitsu" width="104" height="50"></li>
+                    <li class="brand brand-first" data-cat="sicurezza"><img src="assets/images/brands-web/hikvision.png" alt="Hikvision" width="185" height="24"></li>
+                    <li class="brand" data-cat="sicurezza"><img src="assets/images/brands-web/dahua.png" alt="Dahua" width="132" height="39"></li>
+                    <li class="brand" data-cat="sicurezza"><img src="assets/images/brands-web/paradox.png" alt="Paradox" width="185" height="22"></li>
+                    <li class="brand" data-cat="sicurezza"><img src="assets/images/brands-web/elmo.png" alt="EL.MO." width="130" height="40"></li>
+                    <li class="brand" data-cat="sicurezza"><img src="assets/images/brands-web/csi.png" alt="CSI" width="106" height="49"></li>
+                    <li class="brand" data-cat="sicurezza"><img src="assets/images/brands-web/iess.png" alt="IESS" width="50" height="50"></li>
+                    <li class="brand" data-cat="sicurezza"><img src="assets/images/brands-web/tecnofire.png" alt="Tecnofire" width="146" height="36"></li>
+                    <li class="brand brand-first" data-cat="automazione"><img src="assets/images/brands-web/bft.png" alt="BFT" width="58" height="50"></li>
+                    <li class="brand" data-cat="automazione"><img src="assets/images/brands-web/beghelli.png" alt="Beghelli" width="120" height="43"></li>
+                </ul>
+            </div>
+        </section>
+
         <!-- CONSULTING PROCESS -->
         <section class="section" id="consulenza">
             <div class="container">
                 <div class="section-head reveal">
-                    <span class="kicker">Consulenza tecnica</span>
                     <h2 data-decode>Ti spieghiamo ogni passaggio</h2>
                     <p>Oltre a realizzare il lavoro, ti accompagniamo passo dopo passo: così capisci cosa stiamo facendo e ne apprezzi tutti i vantaggi.</p>
                 </div>
@@ -507,7 +673,6 @@
         <section class="section section-alt" id="contatti">
             <div class="container contact">
                 <div class="contact-info reveal">
-                    <span class="kicker">Contatti</span>
                     <h2 data-decode>Accendiamo il tuo progetto</h2>
                     <p>Compila il modulo o chiamaci: il nostro staff ti risponde nel minor tempo possibile.</p>
                     <ul class="contact-list">
