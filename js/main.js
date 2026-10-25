@@ -669,31 +669,25 @@
             prefill: 'Impianti Elettrici'
         },
         clima: {
-            icon: 'fa-temperature-half', tag: 'Linea 2 · Comfort', title: 'Impianti di climatizzazione',
-            text: 'Ogni ambiente ha esigenze diverse. Ti aiutiamo a scegliere la soluzione giusta per il comfort tutto l\'anno: climatizzazione, ricambio d\'aria controllato e impianti di riscaldamento.',
-            list: ['Climatizzazione', 'VMC (ricambio d\'aria)', 'Impianti di riscaldamento'],
-            prefill: 'Impianti di Climatizzazione', extra: ['#domotica', 'Prova il clima']
-        },
-        energia: {
-            icon: 'fa-solar-panel', tag: 'Linea 3 · Energia', title: 'Impianti fotovoltaici',
-            text: 'Produci la tua energia e consumala quando ti serve. Installiamo impianti fotovoltaici e sistemi di accumulo per abbattere i costi in bolletta e aumentare l\'autonomia energetica.',
-            list: ['Installazione impianti fotovoltaici', 'Impianti di accumulo per fotovoltaico'],
-            prefill: 'Impianti Fotovoltaici', extra: ['#consulenza', 'Come lavoriamo']
+            icon: 'fa-temperature-half', tag: 'Linea 2 · Comfort ed energia', title: 'Clima ed energia',
+            text: 'Comfort tutto l\'anno e bollette più leggere. Ti aiutiamo a scegliere climatizzazione, ricambio d\'aria e riscaldamento giusti per ogni ambiente, e a produrre la tua energia con fotovoltaico e accumulo per consumarla quando ti serve.',
+            list: ['Climatizzazione', 'VMC (ricambio d\'aria)', 'Impianti di riscaldamento', 'Impianti fotovoltaici', 'Sistemi di accumulo'],
+            prefill: 'Impianti di Climatizzazione', extra: ['#domotica', 'Prova clima e fotovoltaico']
         },
         domotica: {
-            icon: 'fa-house-signal', tag: 'Linea 4 · Smart home', title: 'Impianti di domotica',
+            icon: 'fa-house-signal', tag: 'Linea 3 · Smart home', title: 'Impianti di domotica',
             text: 'Più comfort, sicurezza ed efficienza, con un occhio al risparmio energetico. Progettiamo impianti domotici su misura per ogni esigenza, da gestire comodamente anche dallo smartphone.',
             list: ['Gestione domotica di luci e tapparelle', 'Controllo dei carichi', 'Gestione di tutto l\'impianto da smartphone', 'Creazione di scenari per semplificare la vita quotidiana'],
             prefill: 'Impianti di Domotica', extra: ['#domotica', 'Provala ora']
         },
         sicurezza: {
-            icon: 'fa-shield-halved', tag: 'Linea 5 · Protezione', title: 'Sorveglianza e antifurto',
+            icon: 'fa-shield-halved', tag: 'Linea 4 · Protezione', title: 'Sorveglianza e antifurto',
             text: 'Impianti di sicurezza attiva e passiva ad alta tecnologia per il settore civile, industriale e commerciale: soluzioni personalizzate per prevenire e inibire ogni tentativo di effrazione.',
             list: ['Impianti antintrusione', 'Impianti antincendio', 'Impianti di videosorveglianza (TVCC)'],
             prefill: 'Impianti di Sorveglianza e Antifurti', extra: ['#domotica', 'Prova l\'allarme']
         },
         reti: {
-            icon: 'fa-satellite-dish', tag: 'Linea 6 · Connettività', title: 'Reti dati e impianti TV',
+            icon: 'fa-satellite-dish', tag: 'Linea 5 · Connettività', title: 'Reti dati e impianti TV',
             text: 'Connessione veloce e segnale TV stabile in ogni stanza. Realizziamo reti dati in rame e fibra ottica e impianti d\'antenna per il digitale terrestre e il satellitare, per case, condomini e aziende.',
             list: ['Reti LAN e cablaggio strutturato', 'Reti in fibra ottica', 'Antenne per il digitale terrestre', 'Parabole e impianti satellitari'],
             prefill: 'Reti Dati e Impianti TV'
@@ -736,13 +730,16 @@
             else if (!current) idle('Tensione presente', 'Scegli un servizio dal quadro', 'fa-bolt');
             else show(current);
         };
+        let touched = false;
         main.addEventListener('click', () => {
+            touched = true;
             mainOn = !mainOn;
             if (!mainOn) current = null;
             Sound.play('clack');
             render();
         });
         const select = (key, sound = true) => {
+            touched = true;
             if (mainOn && current === key) current = null;
             else { mainOn = true; current = key; }
             if (sound) { Sound.play('clack'); if (current) Sound.play('zap'); }
@@ -754,9 +751,34 @@
         };
         breakers.forEach((b) => b.addEventListener('click', () => select(b.dataset.service)));
         $$('[data-open-service]').forEach((a) => a.addEventListener('click', () => {
+            touched = true;
             mainOn = true; current = a.dataset.openService; render();
         }));
         render();
+
+        // the first time the panel is on screen it powers itself up: main switch, then the first line.
+        // Anything the visitor does first wins.
+        const autoOn = () => {
+            if (!('IntersectionObserver' in window)) return;
+            const io = new IntersectionObserver(([en]) => {
+                if (!en.isIntersecting) return;
+                io.disconnect();
+                setTimeout(() => {
+                    if (touched) return;
+                    mainOn = true;
+                    Sound.play('clack');
+                    render();
+                    setTimeout(() => {
+                        if (touched || !mainOn || current) return;
+                        current = breakers[0].dataset.service;
+                        Sound.play('clack'); Sound.play('zap');
+                        render();
+                    }, 700);
+                }, 500);
+            }, { threshold: 0.6 });
+            io.observe(box);
+        };
+        if (booted) autoOn(); else afterBoot(autoOn);
     })();
 
     // Any "request" button can preselect the service in the contact form
@@ -1058,55 +1080,6 @@
         render();
     })();
 
-    /* ------------------------------------------------------------------
-       About: on phones the list becomes rows of chips sliding with the scroll
-    ------------------------------------------------------------------ */
-    const AboutRows = (() => {
-        const list = $('.about-list');
-        if (reduceMotion || !list) return { update() {} };
-        const mq = window.matchMedia('(max-width: 640px)');
-        const items = $$('li', list);
-        const ROWS = 3;
-        const box = document.createElement('div');
-        box.className = 'about-marquee';
-        box.setAttribute('aria-hidden', 'true');
-        const rows = Array.from({ length: ROWS }, (_, r) => {
-            const row = document.createElement('div');
-            row.className = 'about-row';
-            items.filter((_, i) => i % ROWS === r).forEach((li) => {
-                const chip = document.createElement('span');
-                chip.innerHTML = li.innerHTML;
-                row.appendChild(chip);
-            });
-            box.appendChild(row);
-            return { el: row, span: 0 };
-        });
-        list.after(box);
-        list.classList.add('has-marquee');
-
-        let top = 0, height = 1, smooth = -1;
-        onMeasure(() => {
-            const r = box.getBoundingClientRect();
-            top = r.top + window.scrollY;
-            height = state.vh + r.height;
-            rows.forEach((row) => { row.span = Math.max(0, row.el.offsetWidth - box.clientWidth); });
-            smooth = -1;
-        });
-        const update = () => {
-            if (!mq.matches) return;
-            // 0 when the rows enter from the bottom, 1 when they leave at the top
-            const target = clamp((state.scrollY + state.vh - top) / height, 0, 1);
-            const next = smooth < 0 ? target : lerp(smooth, target, 0.12);
-            if (Math.abs(next - smooth) < 0.0005) return;
-            smooth = next;
-            // alternate directions, like cables pulled through the conduit
-            rows.forEach((row, i) => {
-                const k = i % 2 ? 1 - smooth : smooth;
-                row.el.style.transform = `translate3d(${(-row.span * k).toFixed(1)}px, 0, 0)`;
-            });
-        };
-        return { update };
-    })();
 
     /* ------------------------------------------------------------------
        Brands: endless logo strip, filterable by category
@@ -1146,20 +1119,90 @@
     })();
 
     /* ------------------------------------------------------------------
-       Process steps: the line charges up while scrolling
+       Process: the section is pinned, each step owns an equal slice of the
+       scroll and plays its scene inside it
     ------------------------------------------------------------------ */
-    const Steps = (() => {
-        const list = $('[data-steps]');
+    const Process = (() => {
+        const section = $('#consulenza');
+        const list = $('[data-steps]', section);
         const items = $$('.step', list);
-        let lastP = -1;
+        const scenes = $$('.proc-scene', section);
+        const counter = $('[data-proc-count]', section);
+        const capTitle = $('[data-cap-title]', section);
+        const capText = $('[data-cap-text]', section);
+        const N = items.length;
+        const range = (el, attr) => el.dataset[attr].split('-').map(Number);
+        const parts = scenes.map((sc) => ({
+            show: $$('[data-show]', sc).map((el) => [el, Number(el.dataset.show)]),
+            on: $$('[data-on]', sc).map((el) => [el, Number(el.dataset.on)]),
+            draw: $$('[data-draw]', sc).map((el) => [el, ...range(el, 'draw')]),
+            grow: $$('[data-grow]', sc).map((el) => [el, ...range(el, 'grow')]),
+            count: $$('[data-count]', sc).map((el) => [el, ...range(el, 'range')])
+        }));
+        const span = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+        const playScene = (i, t) => {
+            const p = parts[i];
+            p.show.forEach(([el, at]) => el.classList.toggle('is-on', t >= at));
+            p.on.forEach(([el, at]) => el.classList.toggle('is-on', t >= at));
+            p.draw.forEach(([el, a, b]) => { el.style.strokeDashoffset = 1 - span(t, a, b); });
+            p.grow.forEach(([el, a, b]) => { el.style.transform = `scaleX(${span(t, a, b)})`; });
+            p.count.forEach(([el, a, b]) => {
+                el.textContent = (Number(el.dataset.count) * span(t, a, b)).toFixed(Number(el.dataset.dec)) + el.dataset.unit;
+            });
+        };
+
+        let top = 0, height = 1, smooth = -1, lastStep = -1;
+        onMeasure(() => {
+            top = section.getBoundingClientRect().top + window.scrollY;
+            height = Math.max(1, section.offsetHeight - state.vh);
+        });
         const update = () => {
-            const r = list.getBoundingClientRect();
-            if (r.bottom < 0 || r.top > state.vh) return;
-            const p = clamp((state.vh * 0.7 - r.top) / (r.height || 1), 0, 1);
-            if (Math.abs(p - lastP) < 0.002) return;
-            lastP = p;
-            list.style.setProperty('--fill', `${(p * 100).toFixed(1)}%`);
-            items.forEach((el, i) => el.classList.toggle('is-lit', p >= i / (items.length - 1) - 0.02));
+            const target = clamp((state.scrollY - top) / height, 0, 1);
+            const next = smooth < 0 || reduceMotion ? target : lerp(smooth, target, 0.14);
+            if (Math.abs(next - smooth) < 0.0005) return;
+            smooth = next;
+            const pos = smooth * N;
+            const step = Math.min(N - 1, Math.floor(pos));
+            // the scene finishes a little before its slice ends, so it rests complete for a moment
+            scenes.forEach((sc, i) => playScene(i, i < step ? 1 : i > step ? 0 : clamp((pos - step) / 0.8, 0, 1)));
+            list.style.setProperty('--fill', `${(clamp(pos / (N - 1), 0, 1) * 100).toFixed(1)}%`);
+            if (step === lastStep) return;
+            if (lastStep >= 0) Sound.play('tick');
+            lastStep = step;
+            items.forEach((el, i) => { el.classList.toggle('is-lit', i <= step); el.classList.toggle('is-active', i === step); });
+            scenes.forEach((sc, i) => sc.classList.toggle('is-active', i === step));
+            counter.textContent = `0${step + 1} / 0${N}`;
+            capTitle.textContent = $('h3', items[step]).textContent;
+            capText.textContent = $('p', items[step]).textContent;
+        };
+        return { update };
+    })();
+
+    /* ------------------------------------------------------------------
+       Contact finale: the plug slides into the socket while scrolling;
+       on contact the title powers up and the send button glows
+    ------------------------------------------------------------------ */
+    const Plug = (() => {
+        const box = $('[data-plug]');
+        const plug = $('[data-plug-body]', box);
+        const contact = $('.contact');
+        contact.classList.add('is-armed');
+        let smooth = -1, on = false;
+        const update = () => {
+            const r = box.getBoundingClientRect();
+            if (r.bottom < -100 || r.top > state.vh + 100) return;
+            // from entering the screen to reaching its upper half
+            const target = clamp((state.vh - r.top) / (state.vh * 0.55), 0, 1);
+            const next = smooth < 0 || reduceMotion ? target : lerp(smooth, target, 0.16);
+            if (Math.abs(next - smooth) < 0.0005) return;
+            smooth = next;
+            const e = 1 - Math.pow(1 - smooth, 2);
+            plug.setAttribute('transform', `translate(${lerp(-40, 168, e).toFixed(1)} 0)`);
+            const connected = smooth > 0.985;
+            if (connected === on) return;
+            on = connected;
+            contact.classList.toggle('is-powered', on);
+            if (on) { Sound.play('clack'); Sound.play('zap'); }
         };
         return { update };
     })();
@@ -1207,8 +1250,8 @@
         Circuit.draw();
         Sparks.draw();
         Wiring.update();
-        Steps.update();
-        AboutRows.update();
+        Process.update();
+        Plug.update();
         updateMeter(now);
         requestAnimationFrame(loop);
     };
