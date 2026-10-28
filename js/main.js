@@ -194,42 +194,20 @@
         const lever = $('.boot-lever', boot);
         const status = $('[data-boot-status]', boot);
         let powering = false;
-        let drag = null;
-        const powerOn = () => {
+        const powerOn = (byClick) => {
             if (powering) return;
             powering = true;
-            lever.style.removeProperty('--lift');
             boot.classList.add('is-on');
             status.textContent = 'Tensione presente';
-            Sound.playOnce('clack');
+            // browsers only allow audio after a gesture, so the self-raising lever stays silent
+            if (byClick) Sound.playOnce('clack');
             $$('.boot-log span', boot).forEach((el, i) => setTimeout(() => el.classList.add('is-in'), 120 + i * 140));
             setTimeout(() => finishBoot(true), 900);
         };
-        lever.addEventListener('pointerdown', (e) => {
-            drag = { y: e.clientY, moved: false };
-            lever.setPointerCapture(e.pointerId);
-            lever.classList.add('is-dragging');
-        });
-        lever.addEventListener('pointermove', (e) => {
-            if (!drag || powering) return;
-            const lift = clamp(e.clientY - drag.y, -46, 0);
-            if (Math.abs(lift) > 4) drag.moved = true;
-            lever.style.setProperty('--lift', `${lift}px`);
-            if (lift <= -40) powerOn();
-        });
-        const endDrag = () => {
-            if (!drag) return;
-            lever.classList.remove('is-dragging');
-            if (!powering) lever.style.setProperty('--lift', '0px');
-            setTimeout(() => { drag = null; }, 0);
-        };
-        lever.addEventListener('pointerup', endDrag);
-        lever.addEventListener('pointercancel', endDrag);
-        // A plain click/tap or Enter/Space also flips it
-        lever.addEventListener('click', () => { if (!drag || !drag.moved) powerOn(); });
-        $('.boot-skip', boot).addEventListener('click', () => finishBoot(false));
+        // an intro, not a gate: the lever rises by itself after a beat; a click only hurries it
+        setTimeout(() => powerOn(false), 700);
+        lever.addEventListener('click', () => powerOn(true));
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !booted) finishBoot(false); });
-        lever.focus({ preventScroll: true });
     }
 
     /* ------------------------------------------------------------------
@@ -665,62 +643,98 @@
         elettrici: {
             icon: 'fa-plug', tag: 'Linea 1 · Civile e terziario', title: 'Impianti elettrici',
             text: 'Realizziamo impianti elettrici per il settore civile, terziario e industriale, curando ogni dettaglio per un risultato a regola d\'arte: dalla piccola unità abitativa ai condomini, fino a un nuovo stabilimento seguito dall\'inizio alla fine.',
-            list: ['Impianti civili e condominiali', 'Impianti industriali', 'Illuminazione interna ed esterna', 'Automazione cancelli'],
+            list: [
+                ['fa-house-chimney', 'Impianti civili e condominiali'], ['fa-industry', 'Impianti industriali'],
+                ['fa-table-cells', 'Quadri industriali'], ['fa-lightbulb', 'Illuminazione interna ed esterna']
+            ],
             prefill: 'Impianti Elettrici'
         },
         clima: {
             icon: 'fa-temperature-half', tag: 'Linea 2 · Comfort ed energia', title: 'Clima ed energia',
             text: 'Comfort tutto l\'anno e bollette più leggere. Ti aiutiamo a scegliere climatizzazione, ricambio d\'aria e riscaldamento giusti per ogni ambiente, e a produrre la tua energia con fotovoltaico e accumulo per consumarla quando ti serve.',
-            list: ['Climatizzazione', 'VMC (ricambio d\'aria)', 'Impianti di riscaldamento', 'Impianti fotovoltaici', 'Sistemi di accumulo'],
-            prefill: 'Impianti di Climatizzazione', extra: ['#domotica', 'Prova clima e fotovoltaico']
+            list: [
+                ['fa-snowflake', 'Climatizzazione'], ['fa-fan', 'VMC (ricambio d\'aria)'],
+                ['fa-fire-flame-curved', 'Impianti di riscaldamento'], ['fa-solar-panel', 'Impianti fotovoltaici'],
+                ['fa-car-battery', 'Sistemi di accumulo']
+            ],
+            prefill: 'Impianti di Climatizzazione'
         },
         domotica: {
-            icon: 'fa-house-signal', tag: 'Linea 3 · Smart home', title: 'Impianti di domotica',
-            text: 'Più comfort, sicurezza ed efficienza, con un occhio al risparmio energetico. Progettiamo impianti domotici su misura per ogni esigenza, da gestire comodamente anche dallo smartphone.',
-            list: ['Gestione domotica di luci e tapparelle', 'Controllo dei carichi', 'Gestione di tutto l\'impianto da smartphone', 'Creazione di scenari per semplificare la vita quotidiana'],
-            prefill: 'Impianti di Domotica', extra: ['#domotica', 'Provala ora']
+            icon: 'fa-house-signal', tag: 'Linea 3 · Smart home e automazioni', title: 'Domotica e automazione',
+            text: 'Più comfort, sicurezza ed efficienza, con un occhio al risparmio energetico. Progettiamo impianti domotici su misura, da gestire comodamente anche dallo smartphone, e automatizziamo accessi e passaggi di casa e azienda.',
+            list: [
+                ['fa-lightbulb', 'Luci e tapparelle domotiche'], ['fa-gauge-high', 'Controllo dei carichi'],
+                ['fa-mobile-screen-button', 'Tutto l\'impianto da smartphone'], ['fa-wand-magic-sparkles', 'Scenari per la vita quotidiana'],
+                ['fa-road-barrier', 'Cancelli automatici'], ['fa-warehouse', 'Portoni sezionali da garage'],
+                ['fa-arrows-up-to-line', 'Dissuasori a scomparsa']
+            ],
+            prefill: 'Domotica e Automazione'
         },
         sicurezza: {
             icon: 'fa-shield-halved', tag: 'Linea 4 · Protezione', title: 'Sorveglianza e antifurto',
             text: 'Impianti di sicurezza attiva e passiva ad alta tecnologia per il settore civile, industriale e commerciale: soluzioni personalizzate per prevenire e inibire ogni tentativo di effrazione.',
-            list: ['Impianti antintrusione', 'Impianti antincendio', 'Impianti di videosorveglianza (TVCC)'],
-            prefill: 'Impianti di Sorveglianza e Antifurti', extra: ['#domotica', 'Prova l\'allarme']
+            list: [
+                ['fa-user-shield', 'Impianti antintrusione'], ['fa-fire-extinguisher', 'Impianti antincendio'],
+                ['fa-video', 'Videosorveglianza (TVCC)'], ['fa-arrows-up-to-line', 'Dissuasori a scomparsa']
+            ],
+            prefill: 'Impianti di Sorveglianza e Antifurti'
         },
         reti: {
             icon: 'fa-satellite-dish', tag: 'Linea 5 · Connettività', title: 'Reti dati e impianti TV',
-            text: 'Connessione veloce e segnale TV stabile in ogni stanza. Realizziamo reti dati in rame e fibra ottica e impianti d\'antenna per il digitale terrestre e il satellitare, per case, condomini e aziende.',
-            list: ['Reti LAN e cablaggio strutturato', 'Reti in fibra ottica', 'Antenne per il digitale terrestre', 'Parabole e impianti satellitari'],
+            text: 'Connessione veloce e segnale TV stabile in ogni stanza. Realizziamo reti dati in rame e fibra ottica, copertura Wi-Fi dentro e fuori casa e impianti d\'antenna per il digitale terrestre e il satellitare, per case, condomini e aziende.',
+            list: [
+                ['fa-network-wired', 'Reti LAN e cablaggio strutturato'], ['fa-circle-nodes', 'Reti in fibra ottica'],
+                ['fa-wifi', 'Wi-Fi indoor e outdoor con access point'], ['fa-server', 'Armadi rack'],
+                ['fa-tower-broadcast', 'Antenne per il digitale terrestre'], ['fa-satellite-dish', 'Parabole e impianti satellitari']
+            ],
             prefill: 'Reti Dati e Impianti TV'
         }
     };
     const Panel = (() => {
         const main = $('[data-main]');
         const breakers = $$('[data-service]');
+        const keys = breakers.map((b) => b.dataset.service);
         const led = $('[data-panel-led]');
         const box = $('.epanel');
+        const wrap = $('.panel-wrap');
         const mmLine = $('[data-mm-line]');
+        const display = $('.display');
         const screen = $('[data-display]');
-        let mainOn = false, current = null;
+        let mainOn = false, current = null, touched = false;
 
         const idle = (title, sub, icon = 'fa-power-off') => {
             screen.innerHTML = `<div class="display-idle"><i class="fas ${icon}"></i><p>${title}</p><small>${sub}</small></div>`;
         };
         const show = (key) => {
             const s = SERVICES[key];
-            const extra = s.extra ? `<a href="${s.extra[0]}" class="btn btn-ghost">${s.extra[1]}</a>` : '';
             screen.innerHTML = `
                 <div class="svc">
                     <div class="svc-head"><span class="svc-icon"><i class="fas ${s.icon}"></i></span><div><small>${s.tag}</small><h3>${s.title}</h3></div></div>
                     <p>${s.text}</p>
-                    <ul>${s.list.map((l) => `<li>${l}</li>`).join('')}</ul>
-                    <div class="svc-actions"><a href="#contatti" class="btn btn-primary" data-prefill="${s.prefill}">Richiedi un preventivo</a>${extra}</div>
+                    <ul>${s.list.map(([icon, label]) => `<li><i class="fas ${icon}" aria-hidden="true"></i><span>${label}</span></li>`).join('')}</ul>
+                    <div class="svc-actions"><a href="#contatti" class="btn btn-primary" data-prefill="${s.prefill}">Richiedi un preventivo</a></div>
                 </div>`;
         };
-        const render = () => {
+
+        // carousel dots under the display, one per line
+        const dots = keys.map((key) => {
+            const d = document.createElement('button');
+            d.type = 'button';
+            d.className = 'display-dot';
+            d.setAttribute('aria-label', `Mostra ${SERVICES[key].title}`);
+            d.addEventListener('click', () => go(key, true));
+            $('[data-display-dots]').appendChild(d);
+            return d;
+        });
+
+        // announce only what the visitor asked for, not the autoplay
+        const render = (announce = false) => {
+            display.setAttribute('aria-live', announce ? 'polite' : 'off');
             main.setAttribute('aria-pressed', String(mainOn));
             led.classList.toggle('is-on', mainOn);
             box.classList.toggle('is-live', mainOn);
             breakers.forEach((b) => b.setAttribute('aria-pressed', String(mainOn && b.dataset.service === current)));
+            dots.forEach((d, i) => d.setAttribute('aria-current', String(mainOn && keys[i] === current)));
             // multimeter: which line is drawing
             const active = breakers.find((b) => b.dataset.service === current);
             mmLine.textContent = !mainOn ? 'Generale OFF'
@@ -730,36 +744,70 @@
             else if (!current) idle('Tensione presente', 'Scegli un servizio dal quadro', 'fa-bolt');
             else show(current);
         };
-        let touched = false;
+
+        // the visitor's moves pause the autoplay for a while
+        const IDLE = 15000;
+        let holdUntil = 0;
+        const userMove = () => { touched = true; holdUntil = performance.now() + IDLE; };
+        const go = (key, user) => {
+            if (user) { userMove(); Sound.play('clack'); Sound.play('zap'); }
+            mainOn = true;
+            current = key;
+            render(user);
+        };
+        const step = (dir, user) => go(keys[((current ? keys.indexOf(current) : -1) + dir + keys.length) % keys.length], user);
+
         main.addEventListener('click', () => {
-            touched = true;
+            userMove();
             mainOn = !mainOn;
             if (!mainOn) current = null;
             Sound.play('clack');
-            render();
+            render(true);
         });
-        const select = (key, sound = true) => {
-            touched = true;
-            if (mainOn && current === key) current = null;
-            else { mainOn = true; current = key; }
-            if (sound) { Sound.play('clack'); if (current) Sound.play('zap'); }
-            render();
+        breakers.forEach((b) => b.addEventListener('click', () => {
+            userMove();
+            if (mainOn && current === b.dataset.service) current = null;
+            else { mainOn = true; current = b.dataset.service; }
+            Sound.play('clack');
+            if (current) Sound.play('zap');
+            render(true);
             // stacked layout: the display sits under the panel, bring it into view
             if (current && window.innerWidth <= 1020) {
-                setTimeout(() => screen.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }), 250);
+                setTimeout(() => display.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }), 250);
             }
-        };
-        breakers.forEach((b) => b.addEventListener('click', () => select(b.dataset.service)));
-        $$('[data-open-service]').forEach((a) => a.addEventListener('click', () => {
-            touched = true;
-            mainOn = true; current = a.dataset.openService; render();
         }));
+        $$('[data-open-service]').forEach((a) => a.addEventListener('click', () => go(a.dataset.openService, true)));
+
+        // swipe the card on touch screens
+        let swipe = null;
+        screen.addEventListener('touchstart', (e) => { swipe = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }, { passive: true });
+        screen.addEventListener('touchend', (e) => {
+            if (!swipe) return;
+            const dx = e.changedTouches[0].clientX - swipe.x, dy = e.changedTouches[0].clientY - swipe.y;
+            swipe = null;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1, true);
+        }, { passive: true });
         render();
+        // the multimeter line is built from the breaker label, rebuild it in the new language
+        document.addEventListener('langchange', () => render());
+
+        // autoplay: every few seconds the next line closes and the previous one opens. It skips its turn
+        // while the panel is off screen, hovered, keyboard-focused or recently used, and never powers a
+        // panel the visitor switched off.
+        const STEP = 6000;
+        let visible = false;
+        const autoplay = () => {
+            setTimeout(autoplay, STEP);
+            if (reduceMotion || !visible || document.hidden || !mainOn || !current) return;
+            if (performance.now() < holdUntil || wrap.matches(':hover') || wrap.querySelector(':focus-visible')) return;
+            step(1, false);
+        };
 
         // the first time the panel is on screen it powers itself up: main switch, then the first line.
         // Anything the visitor does first wins.
         const autoOn = () => {
             if (!('IntersectionObserver' in window)) return;
+            new IntersectionObserver(([en]) => { visible = en.isIntersecting; }, { threshold: 0.35 }).observe(box);
             const io = new IntersectionObserver(([en]) => {
                 if (!en.isIntersecting) return;
                 io.disconnect();
@@ -770,11 +818,12 @@
                     render();
                     setTimeout(() => {
                         if (touched || !mainOn || current) return;
-                        current = breakers[0].dataset.service;
+                        current = keys[0];
                         Sound.play('clack'); Sound.play('zap');
                         render();
                     }, 700);
                 }, 500);
+                setTimeout(autoplay, STEP);
             }, { threshold: 0.6 });
             io.observe(box);
         };
@@ -1089,12 +1138,18 @@
         if (!strip) return;
         const set = $('.brands-set', strip);
         const filters = $$('[data-brand-filter]');
-        let clones = [];
-        const fill = () => {
+        let clones = [], lastKey = '';
+        const fill = (restart) => {
             if (reduceMotion) return;
+            // measured in the looping layout: the static fallback wraps the set to the strip width
+            strip.classList.add('is-looping');
+            const w = set.offsetWidth || 1;
+            const key = `${w}|${strip.offsetWidth}`;
+            // the page measures on every resize; rebuilding when nothing changed would make the strip jump
+            if (!restart && key === lastKey) return;
+            lastKey = key;
             clones.forEach((c) => c.remove());
             // one set plus enough copies to cover the screen while the first slides out
-            const w = set.offsetWidth || 1;
             clones = Array.from({ length: Math.ceil(strip.offsetWidth / w) }, () => {
                 const c = set.cloneNode(true);
                 c.setAttribute('aria-hidden', 'true');
@@ -1102,7 +1157,10 @@
                 return c;
             });
             strip.style.setProperty('--brands-dur', `${(w / 45).toFixed(1)}s`);
-            strip.classList.add('is-looping');
+            // the new copies start from zero, so the original restarts with them and they stay in step
+            set.style.animation = 'none';
+            void set.offsetWidth;
+            set.style.animation = '';
         };
         filters.forEach((b) => b.addEventListener('click', () => {
             const cat = b.dataset.brandFilter;
@@ -1113,9 +1171,10 @@
             $$('[data-cat]', set).forEach((li) => { li.hidden = cat !== 'all' && li.dataset.cat !== cat; });
             strip.dataset.filter = cat;
             Sound.play('click');
-            fill();
+            // a new category always starts from its first logo
+            fill(true);
         }));
-        onMeasure(fill);
+        onMeasure(() => fill(false));
     })();
 
     /* ------------------------------------------------------------------

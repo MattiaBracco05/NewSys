@@ -52,21 +52,19 @@
         <div class="boot-inner">
             <span class="logo-badge boot-logo"><img src="assets/logo-newsys.png" alt="New Sys s.r.l. Impianti" width="512" height="214"></span>
             <p class="boot-status"><span class="boot-led"></span> <span data-boot-status>Impianto in standby</span></p>
-            <h2 id="boot-title" class="boot-title">Dai corrente al sito</h2>
-            <button class="boot-lever" type="button" aria-label="Alza la leva dell'interruttore generale">
+            <h2 id="boot-title" class="boot-title">Diamo corrente al sito</h2>
+            <button class="boot-lever" type="button" aria-label="Interruttore generale: accendi subito">
                 <span class="boot-lever-track">
                     <span class="boot-lever-on">ON</span>
                     <span class="boot-lever-handle"></span>
                     <span class="boot-lever-off">OFF</span>
                 </span>
             </button>
-            <p class="boot-hint">Clicca o trascina la leva verso l'alto</p>
             <div class="boot-log" aria-hidden="true">
                 <span>Test differenziale ........ <b>OK</b></span>
                 <span>Messa a terra ............. <b>OK</b></span>
                 <span>Isolamento linee .......... <b>OK</b></span>
             </div>
-            <button class="boot-skip" type="button">Entra senza animazione</button>
         </div>
     </div>
 
@@ -85,6 +83,14 @@
             <li><a href="#chi-siamo">Chi siamo</a></li>
             <li><a href="#contatti">Contatti</a></li>
         </ul>
+        <div class="lang-switch" role="group" aria-label="Lingua">
+            <button type="button" data-lang="it" lang="it" aria-pressed="true" title="Italiano">
+                <svg viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg><span>IT</span>
+            </button>
+            <button type="button" data-lang="en" lang="en" aria-pressed="false" title="English">
+                <svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="uk-x"><path d="M30 15h30v15zv15H0zH0V0zV0h30z"/></clipPath><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" clip-path="url(#uk-x)" stroke="#c8102e" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/></svg><span>EN</span>
+            </button>
+        </div>
         <a href="tel:+393357027889" class="nav-call magnetic"><i class="fas fa-phone"></i> <span>335 7027889</span></a>
     </nav>
 
@@ -222,7 +228,7 @@
                             <!-- row 1: main switch (2 modules) + multimeter (4 modules) -->
                             <div class="epanel-row epanel-row-top">
                                 <button class="breaker breaker-main" type="button" data-main aria-pressed="false">
-                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span></span>
                                     <span class="breaker-label"><i class="fas fa-power-off"></i>Generale</span>
                                 </button>
                                 <div class="mm" aria-hidden="true">
@@ -237,28 +243,30 @@
                             <!-- row 2: one line per service -->
                             <div class="epanel-row">
                                 <button class="breaker" type="button" data-service="elettrici" aria-pressed="false">
-                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span></span>
                                     <span class="breaker-label"><i class="fas fa-plug"></i>Elettrici</span>
                                 </button>
                                 <button class="breaker breaker-wide" type="button" data-service="clima" aria-pressed="false">
-                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
-                                    <span class="breaker-label"><i class="fas fa-temperature-half"></i>Clima ed energia</span>
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span></span>
+                                    <span class="breaker-label"><span class="breaker-icons"><i class="fas fa-temperature-half"></i><i class="fas fa-solar-panel"></i></span>Clima ed energia</span>
                                 </button>
-                                <button class="breaker" type="button" data-service="domotica" aria-pressed="false">
-                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
-                                    <span class="breaker-label"><i class="fas fa-house-signal"></i>Domotica</span>
+                                <!-- blank cover: only fills the end of the first rail on phones -->
+                                <span class="breaker-blank" aria-hidden="true"><span class="breaker-led"></span><span class="breaker-body"></span><span class="breaker-label"></span></span>
+                                <button class="breaker breaker-wide" type="button" data-service="domotica" aria-pressed="false">
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span></span>
+                                    <span class="breaker-label"><i class="fas fa-house-signal"></i>Domotica e automazione</span>
                                 </button>
                                 <button class="breaker" type="button" data-service="sicurezza" aria-pressed="false">
-                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span></span>
                                     <span class="breaker-label"><i class="fas fa-shield-halved"></i>Sicurezza</span>
                                 </button>
                                 <button class="breaker" type="button" data-service="reti" aria-pressed="false">
-                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span><span class="breaker-flag"></span></span>
-                                    <span class="breaker-label"><i class="fas fa-satellite-dish"></i>Reti e TV</span>
+                                    <span class="breaker-led"></span><span class="breaker-body"><span class="breaker-slot"><span class="breaker-lever"></span></span></span>
+                                    <span class="breaker-label"><span class="breaker-icons"><i class="fas fa-network-wired"></i><i class="fas fa-satellite-dish"></i></span>Reti e TV</span>
                                 </button>
                             </div>
                             <div class="epanel-foot">
-                                <span>230/400 V ~ 50 Hz</span><span>IP40</span><span>CEI 64-8</span>
+                                <span>230/400 V ~ 50 Hz</span><span>IP40</span><span>CEI 64-8</span><span class="epanel-plate"><img src="assets/logo-newsys.png" alt="New Sys" width="512" height="214"></span>
                             </div>
                         </div>
 
@@ -270,6 +278,7 @@
                                 <small>Alza una levetta del quadro</small>
                             </div>
                         </div>
+                        <div class="display-dots" data-display-dots role="group" aria-label="Servizi"></div>
                     </div>
                 </div>
             </div>
@@ -593,7 +602,7 @@
                             <ul>
                                 <li><i class="fas fa-house-chimney"></i> Impianti civili</li>
                                 <li><i class="fas fa-industry"></i> Impianti industriali</li>
-                                <li><i class="fas fa-road-barrier"></i> Cancelli automatici</li>
+                                <li><i class="fas fa-table-cells"></i> Quadri industriali</li>
                             </ul>
                         </div>
                         <div class="about-group">
@@ -617,6 +626,7 @@
                             <h3><i class="fas fa-house-signal"></i> Domotica e reti</h3>
                             <ul>
                                 <li><i class="fas fa-house-signal"></i> Domotica</li>
+                                <li><i class="fas fa-road-barrier"></i> Cancelli e portoni automatici</li>
                                 <li><i class="fas fa-bell"></i> Videocitofoni</li>
                                 <li><i class="fas fa-network-wired"></i> Reti LAN</li>
                                 <li><i class="fas fa-circle-nodes"></i> Reti in fibra ottica</li>
@@ -689,7 +699,7 @@
                 <div class="container process-grid">
                     <div class="process-text">
                         <div class="section-head reveal">
-                            <h2 data-decode>Ti spieghiamo ogni passaggio</h2>
+                            <h2 data-decode>Ti seguiamo in ogni passaggio</h2>
                             <p>Oltre a realizzare il lavoro, ti accompagniamo passo dopo passo: così capisci cosa stiamo facendo e ne apprezzi tutti i vantaggi.</p>
                         </div>
                         <ol class="steps" data-steps>
@@ -848,18 +858,18 @@
                         <label><span>Servizio</span>
                             <select name="servizio" required>
                                 <option value="">Seleziona servizio</option>
-                                <option>Impianti Elettrici</option>
-                                <option>Impianti di Climatizzazione</option>
-                                <option>Impianti Fotovoltaici</option>
-                                <option>Impianti di Domotica</option>
-                                <option>Impianti di Sorveglianza e Antifurti</option>
-                                <option>Reti Dati e Impianti TV</option>
-                                <option>Consulenza tecnica</option>
+                                <option value="Impianti Elettrici">Impianti Elettrici</option>
+                                <option value="Impianti di Climatizzazione">Impianti di Climatizzazione</option>
+                                <option value="Impianti Fotovoltaici">Impianti Fotovoltaici</option>
+                                <option value="Domotica e Automazione">Domotica e Automazione</option>
+                                <option value="Impianti di Sorveglianza e Antifurti">Impianti di Sorveglianza e Antifurti</option>
+                                <option value="Reti Dati e Impianti TV">Reti Dati e Impianti TV</option>
+                                <option value="Consulenza tecnica">Consulenza tecnica</option>
                             </select>
                         </label>
                     </div>
                     <label><span>Messaggio</span><textarea name="messaggio" rows="5" required></textarea></label>
-                    <label class="form-check"><input type="checkbox" name="privacy" required><span>Ho letto l'<a href="https://www.newsysimpiantielettrici.it/privacy/" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati.</span></label>
+                    <label class="form-check"><input type="checkbox" name="privacy" required><span data-i18n="privacy">Ho letto l'<a href="https://www.newsysimpiantielettrici.it/privacy/" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati.</span></label>
                     <button type="submit" class="btn btn-primary magnetic">Invia richiesta <i class="fas fa-paper-plane"></i></button>
                     <p class="form-status" data-form-status role="status"></p>
                 </form>
@@ -879,7 +889,7 @@
                     <li><a href="#servizi" data-open-service="elettrici">Impianti elettrici</a></li>
                     <li><a href="#servizi" data-open-service="clima">Impianti di climatizzazione</a></li>
                     <li><a href="#servizi" data-open-service="clima">Impianti fotovoltaici</a></li>
-                    <li><a href="#servizi" data-open-service="domotica">Impianti domotici</a></li>
+                    <li><a href="#servizi" data-open-service="domotica">Domotica e automazione</a></li>
                     <li><a href="#servizi" data-open-service="sicurezza">Sorveglianza e antifurto</a></li>
                     <li><a href="#servizi" data-open-service="reti">Reti dati e impianti TV</a></li>
                 </ul>
@@ -910,6 +920,7 @@
         <button class="meter-sound" type="button" data-sound aria-pressed="false" aria-label="Attiva suoni"><i class="fas fa-volume-xmark"></i></button>
     </aside>
 
+    <script src="js/i18n.js"></script>
     <script src="js/main.js"></script>
 </body>
 
