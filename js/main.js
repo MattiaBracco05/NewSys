@@ -641,7 +641,7 @@
     ------------------------------------------------------------------ */
     const SERVICES = {
         elettrici: {
-            icon: 'fa-plug', tag: 'Linea 1 · Civile e terziario', title: 'Impianti elettrici',
+            icon: 'fa-plug', tag: 'Linea 1 · Impianti elettrici', title: 'Elettrici',
             text: 'Realizziamo impianti elettrici per il settore civile, terziario e industriale, curando ogni dettaglio per un risultato a regola d\'arte: dalla piccola unità abitativa ai condomini, fino a un nuovo stabilimento seguito dall\'inizio alla fine.',
             list: [
                 ['fa-house-chimney', 'Impianti civili e condominiali'], ['fa-industry', 'Impianti industriali'],
@@ -650,7 +650,7 @@
             prefill: 'Impianti Elettrici'
         },
         clima: {
-            icon: 'fa-temperature-half', tag: 'Linea 2 · Comfort ed energia', title: 'Clima ed energia',
+            icon: 'fa-temperature-half', tag: 'Linea 2 · Impianti di clima ed energia', title: 'Clima ed energia',
             text: 'Comfort tutto l\'anno e bollette più leggere. Ti aiutiamo a scegliere climatizzazione, ricambio d\'aria e riscaldamento giusti per ogni ambiente, e a produrre la tua energia con fotovoltaico e accumulo per consumarla quando ti serve.',
             list: [
                 ['fa-snowflake', 'Climatizzazione'], ['fa-fan', 'VMC (ricambio d\'aria)'],
@@ -660,7 +660,7 @@
             prefill: 'Impianti di Climatizzazione'
         },
         domotica: {
-            icon: 'fa-house-signal', tag: 'Linea 3 · Smart home e automazioni', title: 'Domotica e automazione',
+            icon: 'fa-house-signal', tag: 'Linea 3 · Impianti di domotica e automazione', title: 'Domotica e automazione',
             text: 'Più comfort, sicurezza ed efficienza, con un occhio al risparmio energetico. Progettiamo impianti domotici su misura, da gestire comodamente anche dallo smartphone, e automatizziamo accessi e passaggi di casa e azienda.',
             list: [
                 ['fa-lightbulb', 'Luci e tapparelle domotiche'], ['fa-gauge-high', 'Controllo dei carichi'],
@@ -671,7 +671,7 @@
             prefill: 'Domotica e Automazione'
         },
         sicurezza: {
-            icon: 'fa-shield-halved', tag: 'Linea 4 · Protezione', title: 'Sorveglianza e antifurto',
+            icon: 'fa-shield-halved', tag: 'Linea 4 · Impianti di sicurezza', title: 'Sicurezza',
             text: 'Impianti di sicurezza attiva e passiva ad alta tecnologia per il settore civile, industriale e commerciale: soluzioni personalizzate per prevenire e inibire ogni tentativo di effrazione.',
             list: [
                 ['fa-user-shield', 'Impianti antintrusione'], ['fa-fire-extinguisher', 'Impianti antincendio'],
@@ -680,7 +680,7 @@
             prefill: 'Impianti di Sorveglianza e Antifurti'
         },
         reti: {
-            icon: 'fa-satellite-dish', tag: 'Linea 5 · Connettività', title: 'Reti dati e impianti TV',
+            icon: 'fa-satellite-dish', tag: 'Linea 5 · Impianti di reti e TV', title: 'Reti e TV',
             text: 'Connessione veloce e segnale TV stabile in ogni stanza. Realizziamo reti dati in rame e fibra ottica, copertura Wi-Fi dentro e fuori casa e impianti d\'antenna per il digitale terrestre e il satellitare, per case, condomini e aziende.',
             list: [
                 ['fa-network-wired', 'Reti LAN e cablaggio strutturato'], ['fa-circle-nodes', 'Reti in fibra ottica'],
@@ -702,6 +702,21 @@
         const screen = $('[data-display]');
         let mainOn = false, current = null, touched = false;
 
+        // on a phone the panel is a column of modules and the display docks under the one switched on,
+        // so cause and effect stay next to each other; on wider screens it keeps its own column
+        const rowMode = window.matchMedia('(max-width: 768px)');
+        const activeBreaker = () => (mainOn && current ? breakers.find((b) => b.dataset.service === current) : null);
+        const placeDisplay = () => {
+            const active = activeBreaker();
+            if (rowMode.matches && active) {
+                if (active.nextElementSibling !== display) active.after(display);
+                display.classList.add('is-inline');
+            } else {
+                if (wrap.lastElementChild !== display) wrap.appendChild(display);
+                display.classList.remove('is-inline');
+            }
+        };
+
         const idle = (title, sub, icon = 'fa-power-off') => {
             screen.innerHTML = `<div class="display-idle"><i class="fas ${icon}"></i><p>${title}</p><small>${sub}</small></div>`;
         };
@@ -709,6 +724,7 @@
             const s = SERVICES[key];
             screen.innerHTML = `
                 <div class="svc">
+                    <button type="button" class="svc-close" data-svc-close aria-label="Chiudi la scheda"><i class="fas fa-xmark"></i></button>
                     <div class="svc-head"><span class="svc-icon"><i class="fas ${s.icon}"></i></span><div><small>${s.tag}</small><h3>${s.title}</h3></div></div>
                     <p>${s.text}</p>
                     <ul>${s.list.map(([icon, label]) => `<li><i class="fas ${icon}" aria-hidden="true"></i><span>${label}</span></li>`).join('')}</ul>
@@ -743,6 +759,7 @@
             if (!mainOn) idle('Linea spenta', 'Alza una levetta del quadro');
             else if (!current) idle('Tensione presente', 'Scegli un servizio dal quadro', 'fa-bolt');
             else show(current);
+            placeDisplay();
         };
 
         // the visitor's moves pause the autoplay for a while
@@ -771,12 +788,21 @@
             Sound.play('clack');
             if (current) Sound.play('zap');
             render(true);
-            // stacked layout: the display sits under the panel, bring it into view
+            // the display is below the switch: bring the pair into view
             if (current && window.innerWidth <= 1020) {
-                setTimeout(() => display.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }), 250);
+                const target = rowMode.matches ? b : display;
+                setTimeout(() => target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }), 250);
             }
         }));
         $$('[data-open-service]').forEach((a) => a.addEventListener('click', () => go(a.dataset.openService, true)));
+
+        screen.addEventListener('click', (e) => {
+            if (!e.target.closest('[data-svc-close]')) return;
+            userMove();
+            current = null;
+            Sound.play('clack');
+            render(true);
+        });
 
         // swipe the card on touch screens
         let swipe = null;
@@ -788,6 +814,7 @@
             if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1, true);
         }, { passive: true });
         render();
+        rowMode.addEventListener('change', placeDisplay);
         // the multimeter line is built from the breaker label, rebuild it in the new language
         document.addEventListener('langchange', () => render());
 
@@ -798,7 +825,7 @@
         let visible = false;
         const autoplay = () => {
             setTimeout(autoplay, STEP);
-            if (reduceMotion || !visible || document.hidden || !mainOn || !current) return;
+            if (reduceMotion || rowMode.matches || !visible || document.hidden || !mainOn || !current) return;
             if (performance.now() < holdUntil || wrap.matches(':hover') || wrap.querySelector(':focus-visible')) return;
             step(1, false);
         };
@@ -817,7 +844,7 @@
                     Sound.play('clack');
                     render();
                     setTimeout(() => {
-                        if (touched || !mainOn || current) return;
+                        if (touched || !mainOn || current || rowMode.matches) return;
                         current = keys[0];
                         Sound.play('clack'); Sound.play('zap');
                         render();
@@ -1175,6 +1202,44 @@
             fill(true);
         }));
         onMeasure(() => fill(false));
+    })();
+
+    /* ------------------------------------------------------------------
+       About: on a phone the four categories sit on a swipeable track,
+       one dot per card (the track is a plain grid on wider screens)
+    ------------------------------------------------------------------ */
+    (() => {
+        const track = $('.about-groups');
+        const dots = $('[data-about-dots]');
+        if (!track || !dots) return;
+        const cards = $$('.about-group', track);
+        const buttons = cards.map((card) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            // the heading is in the translation dictionary, so the label follows the language switch
+            b.setAttribute('aria-label', $('h3', card).textContent.trim());
+            b.addEventListener('click', () => {
+                track.scrollTo({ left: card.offsetLeft - cards[0].offsetLeft, behavior: reduceMotion ? 'auto' : 'smooth' });
+                Sound.play('click');
+            });
+            dots.appendChild(b);
+            return b;
+        });
+        const sync = () => {
+            // the card whose middle is nearest the middle of the track is the one on screen
+            const mid = track.scrollLeft + track.clientWidth / 2;
+            let active = 0, best = Infinity;
+            cards.forEach((card, i) => {
+                const d = Math.abs(card.offsetLeft - cards[0].offsetLeft + card.offsetWidth / 2 - mid);
+                if (d < best) { best = d; active = i; }
+            });
+            buttons.forEach((b, i) => {
+                b.classList.toggle('is-active', i === active);
+                b.setAttribute('aria-current', String(i === active));
+            });
+        };
+        track.addEventListener('scroll', sync, { passive: true });
+        onMeasure(sync);
     })();
 
     /* ------------------------------------------------------------------

@@ -380,7 +380,13 @@ body.power-flicker main, body.power-flicker .nav { animation: flicker .9s steps(
 .display-idle { height: 100%; min-height: 320px; display: grid; place-content: center; text-align: center; color: var(--muted); gap: 6px; font-family: var(--mono); }
 .display-idle i { font-size: 2.2rem; margin-bottom: 8px; color: #2a3366; }
 .display-idle p { margin: 0; letter-spacing: .14em; text-transform: uppercase; }
-.svc { animation: svc-in .5s ease both; }
+.svc { position: relative; animation: svc-in .5s ease both; }
+.svc-close {
+    display: none; position: absolute; top: -2px; right: -2px; width: 38px; height: 38px; place-items: center;
+    border: 1px solid var(--line-strong); border-radius: 50%; background: rgba(255, 255, 255, .05);
+    color: var(--muted); font-size: .95rem; cursor: pointer; transition: color .2s, border-color .2s, background .2s;
+}
+.svc-close:hover { color: var(--yellow); border-color: var(--yellow); background: rgba(255, 179, 32, .1); }
 @keyframes svc-in { from { opacity: 0; filter: blur(6px); } }
 .svc-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
 .svc-icon { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; font-size: 1.4rem; color: #14110a; background: var(--yellow); box-shadow: 0 0 30px rgba(255, 179, 32, .4); flex: none; }
@@ -599,6 +605,13 @@ input[type="range"] { width: 100%; accent-color: var(--yellow); height: 28px; cu
     border: 1px solid var(--line); background: rgba(5, 7, 15, .4); font-size: .82rem; font-weight: 600; line-height: 1.2;
 }
 .about-group li i { color: var(--yellow); font-size: .75rem; }
+.about-dots { display: none; justify-content: center; gap: 2px; margin-top: 14px; }
+.about-dots button { width: 26px; height: 26px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.about-dots button::after {
+    content: ''; width: 8px; height: 8px; border-radius: 999px; background: var(--line-strong);
+    transition: background .2s, width .2s;
+}
+.about-dots button.is-active::after { width: 20px; background: var(--yellow); }
 .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .stat {
     position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
@@ -645,10 +658,11 @@ input[type="range"] { width: 100%; accent-color: var(--yellow); height: 28px; cu
 .brands-strip:not(.is-looping) { justify-content: center; }
 .brands-strip:not(.is-looping) .brands-set { flex-wrap: wrap; justify-content: center; row-gap: 14px; padding-inline: 16px; }
 @media (max-width: 640px) {
-    /* chips on one swipeable line instead of wrapping onto two */
-    .brands-filter { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; margin-inline: -16px; padding: 2px 16px; scrollbar-width: none; }
-    .brands-filter::-webkit-scrollbar { display: none; }
-    .brands-filter .chip { flex: none; }
+    /* icon only: all five categories fit on one line, none scrolls out of sight */
+    .brands-filter { flex-wrap: nowrap; gap: 6px; }
+    .brands-filter .chip { flex: none; width: 48px; height: 44px; padding: 0; justify-content: center; gap: 0; }
+    .brands-filter .chip i { font-size: 1rem; }
+    .brands-filter .chip-text { display: none; }
     .brand { height: 62px; min-width: 100px; padding: 0 16px; }
     .brand img { transform: scale(.85); }
 }
@@ -858,25 +872,20 @@ input[type="range"] { width: 100%; accent-color: var(--yellow); height: 28px; cu
     .lang-switch span { display: none; }
     .hero-frame-top, .hero-frame-bottom { left: 32px; right: 32px; font-size: .64rem; }
     .scroll-cue { bottom: 30px; }
-    .epanel { --bh: 100px; padding: 26px 14px 18px; }
-    .epanel-row { padding: 12px 8px 0; }
-    /* the lines go on two rails of four modules, wide enough for their labels (a blank cover closes the
-       first one); each rail keeps a full-width strip */
-    .epanel-row-top { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-    .mm { grid-column: span 4; }
-    .epanel-row:not(.epanel-row-top) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .epanel-row .breaker-blank { display: grid; }
-    .epanel-row > :first-child .breaker-label, .epanel-row > .breaker-blank + * .breaker-label { margin-left: -8px; border-left: 0; }
-    .epanel-row > :last-child .breaker-label, .epanel-row > .breaker-blank .breaker-label { margin-right: -8px; }
-    .breaker-slot { width: 24px; margin-left: -12px; }
-    .breaker-label { font-size: .56rem; letter-spacing: 0; }
     .mm-body { padding: 10px 8px; }
     .mm-screen { padding: 8px; }
     .mm-row { font-size: .74rem; }
     .mm-line { font-size: .56rem; letter-spacing: .06em; }
     .epanel-foot { font-size: .62rem; gap: 10px; flex-wrap: wrap; }
-    .about-groups { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-    .about-group { padding: 14px; }
+    /* one card at a time on a swipeable track, instead of four stacked down the page */
+    .about-groups {
+        display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+        margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px;
+        scrollbar-width: none; overscroll-behavior-x: contain;
+    }
+    .about-groups::-webkit-scrollbar { display: none; }
+    .about-group { flex: 0 0 100%; scroll-snap-align: start; padding: 14px; }
+    .about-dots { display: flex; }
     .light-switches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .wiring-readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .wiring-side { gap: 18px; }
@@ -892,6 +901,81 @@ input[type="range"] { width: 100%; accent-color: var(--yellow); height: 28px; cu
     .meter-row span:nth-child(-n+2) { display: none; }
     .meter-row b { min-width: 38px; font-size: .78rem; }
     .meter-sound { width: 34px; height: 34px; }
+}
+
+/* ---- Phone: the whole panel turns a quarter turn. The rail runs down the column, each module lies
+   across it with its LED beside it and its label holder to the right, and the display moves in right
+   under the module that is switched on (JS: Panel.placeDisplay). ---- */
+@media (max-width: 768px) {
+    .epanel { --bh: 54px; padding: 24px 12px 16px; gap: 14px; }
+    .epanel-row { display: flex; flex-direction: column; gap: 0; padding: 12px 10px; }
+    /* one module per line: LED, module across the rail, then the label strip */
+    .breaker, .mm, .breaker-blank { grid-template-rows: none; grid-template-columns: 14px 70px minmax(0, 1fr); align-items: center; row-gap: 0; column-gap: 10px; }
+    .breaker-main, .breaker-wide, .mm { grid-column: auto; }
+    /* the meter is its own instrument, not a module on the main switch's rail */
+    .epanel-row-top { gap: 10px; }
+    /* the meter drops its label and runs the full width of the row */
+    .mm { grid-template-columns: 14px minmax(0, 1fr); }
+    .mm .breaker-label { display: none; }
+    .epanel-row .breaker-blank { display: none; }
+    /* the module lies on its side, so the lever travels left (off) to right (on) */
+    .breaker-body {
+        width: 62px; height: 36px; justify-self: center;
+        background: linear-gradient(180deg, #e3e6ee, #fff 35%, #f4f5f9 65%, #d3d7e1);
+    }
+    .breaker-slot, .breaker-main .breaker-slot, .breaker-wide .breaker-slot {
+        left: 21%; top: 50%; width: 58%; height: 56%; margin-left: 0; transform: translateY(-50%);
+    }
+    .breaker-lever {
+        top: 3px; bottom: 3px; height: auto; left: 3%; right: auto; width: 46%;
+        transition: left .22s cubic-bezier(.3, 1.6, .5, 1);
+    }
+    .breaker[aria-pressed="true"] .breaker-lever { top: 3px; left: 51%; }
+    /* the rail runs down the column and every module clips across it, each drawing its own piece */
+    .breaker::before {
+        left: 50px; right: auto; width: 18px; top: 0; bottom: 0; height: auto;
+        background: linear-gradient(90deg, #c3c8d4, #8e94a6 45%, #6f7487 55%, #a9aebb);
+    }
+    .mm::before { display: none; }
+    /* label holder: one vertical strip down the right edge of the rail */
+    .breaker-label {
+        display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin: 0; padding: 10px 12px;
+        min-height: var(--bh); text-align: left; font-size: .72rem; letter-spacing: .04em;
+        border-left: 0; border-top: 1px solid #cdd2dd; box-shadow: none;
+    }
+    .epanel-row > :first-child .breaker-label { margin: 0; border-top: 0; }
+    .epanel-row > :last-child .breaker-label { margin: 0; }
+    .breaker-label i { font-size: 1rem; }
+    /* the main switch is wider than a service module, the way it spans two on the panel */
+    .breaker-main { grid-template-columns: 14px 82px minmax(0, 1fr); }
+    .breaker-main::before { left: 56px; }
+    .breaker-main .breaker-body { width: 74px; height: 52px; }
+    .breaker-main .breaker-label { min-height: 64px; }
+    /* chevron: the row opens, and this says which one is open */
+    .breaker .breaker-label::after {
+        content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: .9rem;
+        margin-left: auto; color: #9aa0bd; transition: transform .25s, color .2s;
+    }
+    .breaker[aria-pressed="true"] .breaker-label::after { transform: rotate(180deg); color: #c98400; }
+    .breaker-main .breaker-label::after { content: none; }
+    /* no line open means nothing to show: the idle screen would just sit under the panel,
+       and here a service opens in its own drawer rather than in a carousel */
+    .display:not(.is-inline) { display: none; }
+    /* the display, docked under the module it belongs to */
+    .display.is-inline {
+        /* inside the enclosure, so it has to undo the panel's dark-on-white text colour */
+        color: var(--text);
+        margin: 6px 0; padding: 8px; border-radius: 10px; border-color: var(--yellow-soft);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .55); animation: drawer-in .28s ease both;
+    }
+    .display.is-inline .display-dots { display: none; }
+    .display.is-inline .display-screen { min-height: 0; padding: 18px 16px; }
+    .display.is-inline .display-idle { min-height: 120px; }
+    /* only the title, in yellow: the line tag belongs to the wide layout */
+    .display.is-inline .svc-head small { display: none; }
+    .display.is-inline .svc h3 { color: var(--yellow); }
+    .display.is-inline .svc-close { display: grid; }
+    @keyframes drawer-in { from { opacity: 0; transform: translateY(-8px); } }
 }
 
 @media (prefers-reduced-motion: reduce) {
